@@ -23,7 +23,7 @@ decks/<slug>/cover.png     optional cover image for the homepage card
 src/site.config.ts         site name, homepage copy, header links, type labels
 src/content.config.ts      the `decks` content collection (reads decks/)
 src/pages/                 Astro pages (index, 404)
-src/components/            DeckWall and DeckCard
+src/components/            DeckWall, DeckCard and Prompt
 src/layouts/Base.astro     html shell, header, footer
 src/styles/                global.css, and theme.css which selects the theme
 src/themes/                site themes, one CSS file each
@@ -184,6 +184,28 @@ correct this section in the same commit.
   `src/content.config.ts`, then render it in `DeckCard.astro`. Document it in
   the headmatter section above.
 
+### Site style
+
+The site has a terminal look, and new pages and components must keep it:
+
+- One monospace typeface for everything (IBM Plex Mono). No second family.
+- Each section starts with a prompt line, `<Prompt command="…" />`, naming
+  the command whose "output" follows (`cat about.txt`, `ls decks/`). The
+  prompt is decoration and is hidden from screen readers, so every section
+  also needs a real heading (it may be `visually-hidden`) or an `aria-label`.
+  The command should be a plausible one for the content; do not invent flags
+  for jokes.
+- Decks are panes: path in the title bar, slide in the body, date and length
+  in the status line. Borders are 1px; corners use `--radius-slide`.
+- Colour carries the meaning it has in a terminal: `--color-prompt` (green)
+  for the prompt and cursor, `--color-accent` (blue) for anything that can be
+  opened, `--color-flag` (yellow) for warnings such as drafts. Do not use
+  colour as decoration.
+- Lowercase for interface labels that mimic commands, paths and flags
+  (`github`, `--type all`). Sentence case for prose and headings.
+- The blinking cursor in the first empty slot is the only animation. Do not
+  add more, and respect `prefers-reduced-motion`.
+
 ### Changing the site theme
 
 A site theme is one CSS file in `src/themes/` that defines the custom
@@ -191,17 +213,19 @@ properties below for light and dark. Components use these properties and no
 other colours, fonts or radii.
 
 ```
---color-table  --color-slide  --color-ink  --color-ink-soft
+--color-table  --color-slide  --color-ink     --color-ink-soft
 --color-line   --color-accent --color-on-accent
+--color-prompt --color-flag
 --font-display --font-body    --weight-regular --weight-strong
 --radius-slide --wall-gap     --page-gutter    --page-width
 ```
 
-To restyle the site, copy `src/themes/lightbox.css` to a new file, change the
-values, and point the import in `src/styles/theme.css` at it. If the theme
-uses a different typeface, install its `@fontsource` package and import it at
-the top of the theme file. Never put raw colour or font values in components;
-add a property to the theme contract instead, and update this list.
+To change colours or the typeface, edit `src/themes/terminal.css`, or copy it
+to a new file and point the import in `src/styles/theme.css` at it. A
+different typeface needs its `@fontsource` package installed and imported at
+the top of the theme file; keep it monospace. Never put raw colour or font
+values in components; add a property to the theme contract instead, and
+update this list.
 
 ### What every deck gets automatically
 
@@ -246,6 +270,9 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
   sub-path. Always build internal links from `import.meta.env.BASE_URL` in
   Astro and from `withBase()` in scripts. Never hard-code a leading `/`.
 - The repository's Pages source must be set to "GitHub Actions".
+- After a deploy, a browser can keep showing the previous build for up to ten
+  minutes, and a deck that was already open can fail to load further slides.
+  Hard-reload (Cmd+Shift+R) before concluding that a change did not work.
 
 ### Dependencies
 

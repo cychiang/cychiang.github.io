@@ -35,7 +35,8 @@ const { isPrintMode, isPresenter, isEmbedded } = useNav()
   padding: 4px 10px 4px 6px;
   border-radius: 999px;
   color: inherit;
-  font-size: 13px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
   line-height: 1.4;
   text-decoration: none;
   opacity: 0.55;

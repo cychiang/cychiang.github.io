@@ -20,9 +20,9 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: var(--weight-regular);
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  font-variant-ligatures: none;
 }
 
 h1,
@@ -33,19 +33,24 @@ p {
 }
 
 a {
-  color: inherit;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .page {

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import DeckWall from '../components/DeckWall.astro';
+import Prompt from '../components/Prompt.astro';
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config';
 
@@ -12,35 +13,41 @@ const decks = (await getCollection('decks', ({ data }) => import.meta.env.DEV ||
 
 <Base>
   <section class="intro">
+    <Prompt command="cat about.txt" />
     <h1>{site.headline}</h1>
-    <p>{site.intro}</p>
+    <p class="intro-text">{site.intro}</p>
   </section>
 
-  <section aria-label="Decks">
+  <section class="decks">
+    <Prompt command="ls decks/" />
+    <h2 class="visually-hidden">Decks</h2>
     <DeckWall decks={decks} />
   </section>
 </Base>
 
 <style>
   .intro {
-    padding-block: clamp(2.5rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4.5rem);
+    padding-block: clamp(2rem, 6vw, 4rem) clamp(2rem, 5vw, 3.5rem);
   }
 
   h1 {
-    max-width: 17ch;
+    max-width: 24ch;
+    margin-top: 1rem;
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 7vw, 4.75rem);
+    font-size: clamp(1.75rem, 4.6vw, 3.25rem);
     font-weight: var(--weight-strong);
-    line-height: 0.98;
+    line-height: 1.1;
     letter-spacing: -0.03em;
     text-wrap: balance;
   }
 
-  .intro p {
-    max-width: 56ch;
-    margin-top: 1.5rem;
+  .intro-text {
+    max-width: 68ch;
+    margin-top: 1.25rem;
     color: var(--color-ink-soft);
-    font-size: 1.1875rem;
-    line-height: 1.5;
+  }
+
+  .decks :global(.prompt) {
+    margin-bottom: 1.25rem;
   }
 </style>

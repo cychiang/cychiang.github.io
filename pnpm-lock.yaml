@@ -169,7 +169,7 @@ importers:
 
   .:
     dependencies:
-      '@fontsource-variable/familjen-grotesk':
+      '@fontsource/ibm-plex-mono':
         specifier: ^5.3.0
         version: 5.3.0
       '@slidev/cli':
@@ -773,8 +773,8 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@fontsource-variable/familjen-grotesk@5.3.0':
-    resolution: {integrity: sha512-R9W0xEZRIHUV658cuOGRMAIcqX1QJ8p5/W6Boooa6zAw1BAozU//mr8C0VNggSE26/VHPwj2XNyMAG6yUJmjxA==}
+  '@fontsource/ibm-plex-mono@5.3.0':
+    resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
 
   '@hono/node-server@1.19.17':
     resolution: {integrity: sha512-dSneS5qhiauZWGDCeK4o695Xd9nUNjviSZCMQrj10eetr8Uln1ucn6bbphOM6UynAMMtNIzZNSpL9vnASJwrPQ==}
@@ -4818,7 +4818,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@fontsource-variable/familjen-grotesk@5.3.0': {}
+  '@fontsource/ibm-plex-mono@5.3.0': {}
 
   '@hono/node-server@1.19.17(hono@4.13.13)':
     dependencies:

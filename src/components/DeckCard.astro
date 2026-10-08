@@ -15,60 +15,54 @@ const { title, description, date, type, event, slides, links, draft } = deck.dat
 
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const href = `${base}/decks/${deck.id}/`;
-const dateLabel = new Intl.DateTimeFormat('en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-}).format(date);
+const isoDate = date.toISOString().slice(0, 10);
 const extraLinks = Object.entries(links);
 ---
 
-<article class:list={['deck', { 'deck-typeset': !cover }]} data-type={type}>
-  <a class="deck-slide" href={href} aria-labelledby={`deck-${deck.id}`}>
-    {
-      cover ? (
-        <Image src={cover} alt="" widths={[480, 960]} sizes="(min-width: 60rem) 30vw, (min-width: 36rem) 45vw, 90vw" />
-      ) : (
-        <span class="deck-cover" aria-hidden="true">
-          <span class="deck-cover-event">{event ?? typeLabels[type]?.one}</span>
-          <span class="deck-cover-title">{title}</span>
-        </span>
-      )
-    }
+<article class="deck" data-type={type}>
+  <!-- The deck as a terminal pane: path in the title bar, slide in the body,
+       facts in the status line. The whole pane is the link. -->
+  <a class="pane" href={href} aria-labelledby={`deck-${deck.id}`}>
+    <span class="pane-bar" aria-hidden="true">
+      <span class="pane-path">decks/{deck.id}</span>
+      <span>{typeLabels[type]?.one.toLowerCase() ?? type}</span>
+    </span>
+
+    <span class="pane-body">
+      {
+        cover ? (
+          <Image src={cover} alt="" widths={[480, 960]} sizes="(min-width: 60rem) 30vw, (min-width: 36rem) 45vw, 90vw" />
+        ) : (
+          <span class="pane-title" aria-hidden="true">{title}</span>
+        )
+      }
+    </span>
+
+    <span class="pane-status" aria-hidden="true">
+      <span>{isoDate}</span>
+      <span>{slides} {slides === 1 ? 'slide' : 'slides'}</span>
+    </span>
   </a>
 
-  <h2 id={`deck-${deck.id}`}>{title}</h2>
+  <h3 id={`deck-${deck.id}`} class:list={{ 'visually-hidden': !cover }}>{title}</h3>
   {description && <p class="deck-description">{description}</p>}
 
-  <dl>
-    <div>
-      <dt class="visually-hidden">Date</dt>
-      <dd><time datetime={date.toISOString().slice(0, 10)}>{dateLabel}</time></dd>
-    </div>
-    <div>
-      <dt class="visually-hidden">Kind</dt>
-      <dd>{typeLabels[type]?.one ?? type}</dd>
-    </div>
-    <div>
-      <dt class="visually-hidden">Length</dt>
-      <dd>{slides} {slides === 1 ? 'slide' : 'slides'}</dd>
-    </div>
-    {
-      draft && (
-        <div>
-          <dt class="visually-hidden">Status</dt>
-          <dd class="deck-draft">Draft, hidden when published</dd>
-        </div>
-      )
-    }
+  <dl class="visually-hidden">
+    <dt>Date</dt>
+    <dd><time datetime={isoDate}>{isoDate}</time></dd>
+    <dt>Kind</dt>
+    <dd>{typeLabels[type]?.one ?? type}</dd>
+    <dt>Length</dt>
+    <dd>{slides} {slides === 1 ? 'slide' : 'slides'}</dd>
   </dl>
 
   {
-    extraLinks.length > 0 && (
-      <ul class="deck-links">
+    (event || draft || extraLinks.length > 0) && (
+      <ul class="deck-notes">
+        {event && <li>{event}</li>}
+        {draft && <li class="deck-draft">draft, hidden when published</li>}
         {extraLinks.map(([name, url]) => (
-          <li><a href={url}>{linkLabels[name] ?? name}</a></li>
+          <li><a href={url}>{(linkLabels[name] ?? name).toLowerCase()}</a></li>
         ))}
       </ul>
     )
@@ -83,30 +77,61 @@ const extraLinks = Object.entries(links);
     min-width: 0;
   }
 
-  /* The slide itself: a 16:9 sheet on the table. */
-  .deck-slide {
-    display: block;
-    aspect-ratio: 16 / 9;
+  .pane {
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     background: var(--color-slide);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-slide);
     color: var(--color-ink);
+  }
+
+  /* The pane you point at becomes the active one, as in a multiplexer. */
+  .pane:hover,
+  .pane:focus-visible {
+    border-color: var(--color-accent);
     text-decoration: none;
-    outline: 2px solid transparent;
-    outline-offset: 4px;
-    transition: outline-color 120ms ease;
   }
 
-  /* Hover and focus select the slide, the way a slide sorter does. */
-  .deck-slide:hover,
-  .deck-slide:focus-visible {
-    color: var(--color-ink);
-    outline-color: var(--color-accent);
-    border-radius: var(--radius-slide);
+  .pane-bar,
+  .pane-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.375rem 0.75rem;
+    color: var(--color-ink-soft);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    white-space: nowrap;
   }
 
-  .deck-slide :global(img) {
+  .pane-bar {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .pane-status {
+    border-top: 1px solid var(--color-line);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pane-path {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pane:hover .pane-path,
+  .pane:focus-visible .pane-path {
+    color: var(--color-accent);
+  }
+
+  .pane-body {
+    display: flex;
+    align-items: flex-end;
+    aspect-ratio: 16 / 9;
+  }
+
+  .pane-body :global(img) {
     display: block;
     width: 100%;
     height: 100%;
@@ -114,89 +139,69 @@ const extraLinks = Object.entries(links);
   }
 
   /* Typeset cover, used until the deck ships its own cover image. */
-  .deck-cover {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding: 7cqi 7.5cqi;
+  .pane-title {
+    max-width: 18ch;
+    padding: 6cqi;
     font-family: var(--font-display);
-  }
-
-  .deck-cover-event {
-    font-size: max(0.8125rem, 3.6cqi);
-    color: var(--color-ink-soft);
-  }
-
-  .deck-cover-title {
-    max-width: 16ch;
-    font-size: clamp(1.5rem, 10.5cqi, 3.25rem);
+    font-size: clamp(1.25rem, 8cqi, 2.25rem);
     font-weight: var(--weight-strong);
-    line-height: 1;
+    line-height: 1.12;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
-  h2 {
-    margin-top: 1rem;
-    font-family: var(--font-display);
-    font-size: 1.1875rem;
-    font-weight: var(--weight-strong);
-    line-height: 1.25;
+  /* A block cursor after the title of the pane you are about to open. */
+  .pane-title::after {
+    content: '';
+    display: inline-block;
+    width: 0.55em;
+    height: 0.95em;
+    margin-left: 0.15em;
+    vertical-align: -0.08em;
+    background: transparent;
   }
 
-  /* A typeset cover already shows the title, so the caption starts lower. */
-  .deck-typeset h2 {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .pane:hover .pane-title::after,
+  .pane:focus-visible .pane-title::after {
+    background: var(--color-prompt);
   }
 
-  .deck-typeset .deck-description {
-    margin-top: 0.875rem;
-  }
-
-  .deck-description {
-    margin-top: 0.25rem;
-    color: var(--color-ink-soft);
+  h3 {
+    margin-top: 0.75rem;
     font-size: 0.9375rem;
-    line-height: 1.45;
+    font-weight: var(--weight-strong);
   }
 
-  dl {
+  /* Read as a shell comment under the pane. */
+  .deck-description {
+    margin-top: 0.75rem;
+    padding-left: 2ch;
+    text-indent: -2ch;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .deck-description::before {
+    content: '# ';
+  }
+
+  h3 + .deck-description {
+    margin-top: 0.125rem;
+  }
+
+  .deck-notes {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.125rem 1.125rem;
-    margin: 0.625rem 0 0;
+    gap: 0 2ch;
+    margin: 0.375rem 0 0;
+    padding: 0 0 0 2ch;
+    list-style: none;
     color: var(--color-ink-soft);
-    font-size: 0.875rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  dd {
-    margin: 0;
+    font-size: 0.8125rem;
   }
 
   .deck-draft {
-    color: var(--color-accent);
-  }
-
-  .deck-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.125rem 1.125rem;
-    margin: 0.375rem 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 0.875rem;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .deck-slide {
-      transition: none;
-    }
+    color: var(--color-flag);
   }
 </style>
