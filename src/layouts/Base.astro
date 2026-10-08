@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import { site } from '../site.config';
+
+interface Props {
+  /** Page title. Omit on the homepage. */
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} | ${site.name}` : site.name;
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <header class="page site-header">
+      <a class="site-name" href={`${base}/`}>{site.name}</a>
+      <nav aria-label="Elsewhere">
+        <ul>
+          {site.links.map((link) => (
+            <li><a href={link.href} rel="me">{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page">
+      <slot />
+    </main>
+
+    <footer class="page site-footer">
+      <p>
+        Built with <a href="https://astro.build">Astro</a> and <a href="https://sli.dev">Slidev</a>.
+        The <a href={site.repo}>source is on GitHub</a>.
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-block: 1.75rem;
+  }
+
+  .site-name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-strong);
+    text-decoration: none;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--color-ink-soft);
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    color: var(--color-accent);
+  }
+
+  main {
+    flex: 1;
+  }
+
+  .site-footer {
+    padding-block: 4rem 2rem;
+    color: var(--color-ink-soft);
+    font-size: 0.9375rem;
+  }
+</style>

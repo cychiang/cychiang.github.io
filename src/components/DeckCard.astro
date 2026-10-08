@@ -1,0 +1,202 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { linkLabels, typeLabels } from '../site.config';
+
+interface Props {
+  deck: CollectionEntry<'decks'>;
+  /** decks/<slug>/cover.(png|jpg|webp), when the deck has one. */
+  cover?: ImageMetadata;
+}
+
+const { deck, cover } = Astro.props;
+const { title, description, date, type, event, slides, links, draft } = deck.data;
+
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const href = `${base}/decks/${deck.id}/`;
+const dateLabel = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(date);
+const extraLinks = Object.entries(links);
+---
+
+<article class:list={['deck', { 'deck-typeset': !cover }]} data-type={type}>
+  <a class="deck-slide" href={href} aria-labelledby={`deck-${deck.id}`}>
+    {
+      cover ? (
+        <Image src={cover} alt="" widths={[480, 960]} sizes="(min-width: 60rem) 30vw, (min-width: 36rem) 45vw, 90vw" />
+      ) : (
+        <span class="deck-cover" aria-hidden="true">
+          <span class="deck-cover-event">{event ?? typeLabels[type]?.one}</span>
+          <span class="deck-cover-title">{title}</span>
+        </span>
+      )
+    }
+  </a>
+
+  <h2 id={`deck-${deck.id}`}>{title}</h2>
+  {description && <p class="deck-description">{description}</p>}
+
+  <dl>
+    <div>
+      <dt class="visually-hidden">Date</dt>
+      <dd><time datetime={date.toISOString().slice(0, 10)}>{dateLabel}</time></dd>
+    </div>
+    <div>
+      <dt class="visually-hidden">Kind</dt>
+      <dd>{typeLabels[type]?.one ?? type}</dd>
+    </div>
+    <div>
+      <dt class="visually-hidden">Length</dt>
+      <dd>{slides} {slides === 1 ? 'slide' : 'slides'}</dd>
+    </div>
+    {
+      draft && (
+        <div>
+          <dt class="visually-hidden">Status</dt>
+          <dd class="deck-draft">Draft, hidden when published</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    extraLinks.length > 0 && (
+      <ul class="deck-links">
+        {extraLinks.map(([name, url]) => (
+          <li><a href={url}>{linkLabels[name] ?? name}</a></li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .deck {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* The slide itself: a 16:9 sheet on the table. */
+  .deck-slide {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-slide);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-slide);
+    color: var(--color-ink);
+    text-decoration: none;
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+    transition: outline-color 120ms ease;
+  }
+
+  /* Hover and focus select the slide, the way a slide sorter does. */
+  .deck-slide:hover,
+  .deck-slide:focus-visible {
+    color: var(--color-ink);
+    outline-color: var(--color-accent);
+    border-radius: var(--radius-slide);
+  }
+
+  .deck-slide :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Typeset cover, used until the deck ships its own cover image. */
+  .deck-cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 7cqi 7.5cqi;
+    font-family: var(--font-display);
+  }
+
+  .deck-cover-event {
+    font-size: max(0.8125rem, 3.6cqi);
+    color: var(--color-ink-soft);
+  }
+
+  .deck-cover-title {
+    max-width: 16ch;
+    font-size: clamp(1.5rem, 10.5cqi, 3.25rem);
+    font-weight: var(--weight-strong);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  h2 {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: var(--weight-strong);
+    line-height: 1.25;
+  }
+
+  /* A typeset cover already shows the title, so the caption starts lower. */
+  .deck-typeset h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .deck-typeset .deck-description {
+    margin-top: 0.875rem;
+  }
+
+  .deck-description {
+    margin-top: 0.25rem;
+    color: var(--color-ink-soft);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 1.125rem;
+    margin: 0.625rem 0 0;
+    color: var(--color-ink-soft);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .deck-draft {
+    color: var(--color-accent);
+  }
+
+  .deck-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 1.125rem;
+    margin: 0.375rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deck-slide {
+      transition: none;
+    }
+  }
+</style>

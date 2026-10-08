@@ -1,0 +1,22 @@
+# build output
+dist/
+decks/*/dist/
+
+# generated
+.astro/
+.slidev/
+components.d.ts
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.*
+
+# OS and editors
+.DS_Store
+.idea/

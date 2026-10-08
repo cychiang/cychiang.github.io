@@ -1,0 +1,36 @@
+{
+  "name": "cychiang.github.com",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Personal site: a wall of Slidev decks, built with Astro.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "deck": "node scripts/deck.mjs",
+    "new:deck": "node scripts/new-deck.mjs",
+    "check": "node scripts/check-decks.mjs && astro check",
+    "build": "npm run build:site && npm run build:decks",
+    "build:site": "astro build",
+    "build:decks": "node scripts/build-decks.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/familjen-grotesk": "^5.3.0",
+    "@slidev/cli": "^53.0.0",
+    "@slidev/parser": "^53.0.0",
+    "@slidev/theme-default": "^0.25.0",
+    "astro": "^7.3.8",
+    "vue": "^3.5.43",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "magic-string@^1.4.0": "1.4.2"
+  }
+}
