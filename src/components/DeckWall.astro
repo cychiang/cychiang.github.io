@@ -61,18 +61,27 @@ const emptySlots = Math.max(0, 3 - decks.length);
   const wall = document.querySelector<HTMLElement>('[data-wall]');
   const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
 
-  for (const button of buttons) {
-    button.addEventListener('click', () => {
-      const filter = button.dataset.filter;
-      for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
-      for (const card of wall?.querySelectorAll<HTMLElement>('[data-type]') ?? []) {
-        card.hidden = filter !== 'all' && card.dataset.type !== filter;
-      }
-      for (const slot of wall?.querySelectorAll<HTMLElement>('[data-empty-slot]') ?? []) {
-        slot.hidden = filter !== 'all';
-      }
-    });
+  /** Show only decks of one type ('all' shows everything). */
+  function applyFilter(type: string) {
+    for (const button of buttons) {
+      button.setAttribute('aria-pressed', String(button.dataset.filter === type));
+    }
+    for (const card of wall?.querySelectorAll<HTMLElement>('[data-type]') ?? []) {
+      card.hidden = type !== 'all' && card.dataset.type !== type;
+    }
+    for (const slot of wall?.querySelectorAll<HTMLElement>('[data-empty-slot]') ?? []) {
+      slot.hidden = type !== 'all';
+    }
   }
+
+  for (const button of buttons) {
+    button.addEventListener('click', () => applyFilter(button.dataset.filter ?? 'all'));
+  }
+
+  // The terminal's `ls --type …` filters the same wall.
+  document.addEventListener('decks:filter', (event) => {
+    applyFilter((event as CustomEvent<{ type: string }>).detail.type);
+  });
 </script>
 
 <style>

@@ -1,0 +1,36 @@
+---
+// The prompt itself: user@host:~$  Shared by the static Prompt line and the
+// live Terminal input so the two always look the same.
+import { site } from '../site.config';
+---
+
+<span class="prompt-prefix" aria-hidden="true"
+  ><span class="prompt-host">{site.prompt.user}@{site.prompt.host}</span><span class="prompt-path">:~</span
+  ><span class="prompt-sign">$</span></span
+>
+
+<style>
+  .prompt-prefix {
+    white-space: nowrap;
+  }
+
+  .prompt-host {
+    color: var(--color-prompt);
+  }
+
+  .prompt-path {
+    color: var(--color-accent);
+  }
+
+  .prompt-sign {
+    color: var(--color-ink-soft);
+  }
+
+  /* On a phone the host is noise; the sign alone still reads as a prompt. */
+  @media (max-width: 36rem) {
+    .prompt-host,
+    .prompt-path {
+      display: none;
+    }
+  }
+</style>

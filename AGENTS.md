@@ -23,7 +23,7 @@ decks/<slug>/cover.png     optional cover image for the homepage card
 src/site.config.ts         site name, homepage copy, header links, type labels
 src/content.config.ts      the `decks` content collection (reads decks/)
 src/pages/                 Astro pages (index, 404)
-src/components/            DeckWall, DeckCard and Prompt
+src/components/            DeckWall, DeckCard, Terminal (live prompt) and Prompt
 src/layouts/Base.astro     html shell, header, footer
 src/styles/                global.css, and theme.css which selects the theme
 src/themes/                site themes, one CSS file each
@@ -195,6 +195,18 @@ The site has a terminal look, and new pages and components must keep it:
   also needs a real heading (it may be `visually-hidden`) or an `aria-label`.
   The command should be a plausible one for the content; do not invent flags
   for jokes.
+- The prompt above the deck wall is live (`Terminal.astro`): visitors can
+  type `help`, `ls [--type <kind>]`, `cat <name>`, `open <deck>` (or `cd`),
+  `whoami` and `clear`, with Tab completion and Up/Down history. Rules for
+  changing it:
+  - Everything a command does must also be possible with mouse or touch
+    elsewhere on the page. The terminal is a second way in, never the only one.
+  - Keep commands few and shaped like real shell commands. Add one only when
+    it does something useful on this site, and list it in `help`.
+  - It must not take focus on page load, and the page must still read
+    correctly without JavaScript (the static `ls decks/` line is the fallback).
+  - Deck names and kinds come from the `decks` collection; never hard-code
+    them in the script.
 - Decks are panes: path in the title bar, slide in the body, date and length
   in the status line. Borders are 1px; corners use `--radius-slide`.
 - Colour carries the meaning it has in a terminal: `--color-prompt` (green)

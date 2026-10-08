@@ -1,9 +1,10 @@
 ---
-// One line of the "session": the shell prompt followed by a command. It labels
-// the section below it the way a command labels its output. Decorative, so it
-// is hidden from assistive technology; give the section a real heading or an
-// aria-label as well.
-import { site } from '../site.config';
+// A finished line of the "session": the prompt followed by a command that has
+// already run. It labels the section below it the way a command labels its
+// output. Decorative, so it is hidden from assistive technology; give the
+// section a real heading or an aria-label as well. For a prompt people can
+// type into, use Terminal.astro.
+import PromptPrefix from './PromptPrefix.astro';
 
 interface Props {
   command: string;
@@ -13,8 +14,7 @@ const { command } = Astro.props;
 ---
 
 <p class="prompt" aria-hidden="true">
-  <span class="prompt-host">{site.prompt.user}@{site.prompt.host}</span><span class="prompt-path">:~</span><span class="prompt-sign">$</span>
-  <span class="prompt-command">{command}</span>
+  <PromptPrefix /><span class="prompt-command">{command}</span>
 </p>
 
 <style>
@@ -23,27 +23,7 @@ const { command } = Astro.props;
     overflow-wrap: anywhere;
   }
 
-  .prompt-host {
-    color: var(--color-prompt);
-  }
-
-  .prompt-path {
-    color: var(--color-accent);
-  }
-
-  .prompt-sign {
-    color: var(--color-ink-soft);
-  }
-
   .prompt-command {
     margin-left: 1ch;
-  }
-
-  /* On a phone the host is noise; the sign alone still reads as a prompt. */
-  @media (max-width: 36rem) {
-    .prompt-host,
-    .prompt-path {
-      display: none;
-    }
   }
 </style>
