@@ -17,7 +17,7 @@ export const site = {
     { label: 'github', href: 'https://github.com/cychiang' },
     { label: 'linkedin', href: 'https://www.linkedin.com/in/chuan-yen' },
   ],
-  repo: 'https://github.com/cychiang/cychiang.github.com',
+  repo: 'https://github.com/cychiang/cychiang.github.io',
 } as const;
 
 /** How each `card.type` is worded on the site. Keys mirror DECK_TYPES. */

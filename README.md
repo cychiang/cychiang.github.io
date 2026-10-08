@@ -1,4 +1,4 @@
-# cychiang.github.com
+# cychiang.github.io
 
 My personal site: a wall of slide decks about platform engineering. Each deck is
 written in Markdown with [Slidev](https://sli.dev); the homepage is built with
