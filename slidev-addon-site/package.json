@@ -1,0 +1,7 @@
+{
+  "name": "slidev-addon-site",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Local Slidev addon applied to every deck in this repository: the way back to the homepage.",
+  "keywords": ["slidev-addon"]
+}

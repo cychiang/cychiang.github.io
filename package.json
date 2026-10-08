@@ -18,6 +18,11 @@
     "build:decks": "node scripts/build-decks.ts",
     "preview": "astro preview"
   },
+  "slidev": {
+    "addons": [
+      "@/../../slidev-addon-site"
+    ]
+  },
   "dependencies": {
     "@fontsource-variable/familjen-grotesk": "^5.3.0",
     "@slidev/cli": "^53.0.0",

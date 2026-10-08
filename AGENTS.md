@@ -30,6 +30,7 @@ src/themes/                site themes, one CSS file each
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
 scripts/                   new-deck, deck (dev server), check-decks, build-decks
 scripts/templates/         the template a new deck starts from
+slidev-addon-site/         local Slidev addon applied to every deck (link home)
 pnpm-workspace.yaml        pnpm settings: overrides and allowed install scripts
 .github/workflows/         build on pull requests, deploy on push to main
 ```
@@ -202,6 +203,22 @@ uses a different typeface, install its `@fontsource` package and import it at
 the top of the theme file. Never put raw colour or font values in components;
 add a property to the theme contract instead, and update this list.
 
+### What every deck gets automatically
+
+`slidev-addon-site/` is a local Slidev addon. The root `package.json` lists it
+under `slidev.addons`, so Slidev loads it for every deck with nothing to add
+to a deck's headmatter. It provides the way back to the homepage:
+
+- `global-top.vue`: an "All decks" link in the top-left corner of every slide.
+  It is hidden in presenter view, in exports and when a deck is embedded.
+- `custom-nav-controls.vue`: a home button in Slidev's control bar.
+- `site-home.ts`: works out the homepage URL from the deck's base path.
+
+A deck must always offer a way back to the homepage; do not remove these
+without replacing them. Put anything else that should appear on every deck
+(a footer, a logo) in this addon, not in individual decks. A deck can still
+add its own `global-top.vue`; Slidev renders both.
+
 ### Slidev themes
 
 Each deck chooses its own Slidev theme with `theme:` in its headmatter. Theme
@@ -252,6 +269,8 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 - `pnpm check` and `pnpm build` both pass.
 - For visual changes, look at the result with `pnpm preview` in light and
   dark, at phone and desktop widths.
+- Navigation works both ways: from the homepage into a deck, and from any
+  slide back to the homepage.
 - No files changed under `.agents/`, `.claude/`, `.cortex/`, or in
   `skills-lock.json`, unless the task was to update skills.
 - This file still describes the repository. If you changed a convention,
