@@ -7,19 +7,20 @@ Pages.
 
 ## Quick start
 
-Requires Node.js 22.12 or newer.
+Requires Node.js 22.18 or newer and [pnpm](https://pnpm.io) (`corepack enable`
+installs the version pinned in `package.json`).
 
 ```bash
-npm install
-npm run dev                        # homepage at http://localhost:4321
-npm run deck -- 2026-hello-world   # one deck at http://localhost:3030
+pnpm install
+pnpm dev                     # homepage at http://localhost:4321
+pnpm deck 2026-hello-world   # one deck at http://localhost:3030
 ```
 
 ## Add a deck
 
 ```bash
-npm run new:deck -- 2026-my-talk "My talk title"
-npm run deck -- 2026-my-talk
+pnpm new:deck 2026-my-talk "My talk title"
+pnpm deck 2026-my-talk
 ```
 
 Write the slides in `decks/2026-my-talk/slides.md`, set `card.draft: false` when
@@ -29,9 +30,9 @@ headmatter.
 ## Build
 
 ```bash
-npm run check     # validate decks and types
-npm run build     # homepage and every published deck into dist/
-npm run preview   # serve dist/ locally
+pnpm check     # validate decks and types
+pnpm build     # homepage and every published deck into dist/
+pnpm preview   # serve dist/ locally
 ```
 
 The full conventions, for people and coding agents alike, are in

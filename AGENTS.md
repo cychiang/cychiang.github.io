@@ -27,17 +27,32 @@ src/components/            DeckWall and DeckCard
 src/layouts/Base.astro     html shell, header, footer
 src/styles/                global.css, and theme.css which selects the theme
 src/themes/                site themes, one CSS file each
-scripts/lib/decks.mjs      deck discovery and validation, shared by everything
+scripts/lib/decks.ts       deck discovery and validation, shared by everything
 scripts/                   new-deck, deck (dev server), check-decks, build-decks
 scripts/templates/         the template a new deck starts from
+pnpm-workspace.yaml        pnpm settings: overrides and allowed install scripts
 .github/workflows/         build on pull requests, deploy on push to main
 ```
+
+## Toolchain
+
+- **pnpm** is the package manager. Do not use npm or yarn, and do not commit
+  a `package-lock.json`. The pnpm version is pinned by `packageManager` in
+  `package.json`; `corepack enable` makes it available.
+- **TypeScript** everywhere: the Astro site, `astro.config.ts`, and every
+  script. Do not add `.js` or `.mjs` source files.
+- Scripts in `scripts/` are run directly by Node (`node scripts/x.ts`), with
+  no build step. Node strips the types but cannot compile TypeScript-only
+  runtime features, so use erasable syntax only: no enums, namespaces or
+  parameter properties; use `import type` for types; write relative imports
+  with the `.ts` extension. `tsconfig.json` enforces this
+  (`erasableSyntaxOnly`), and `pnpm check` type-checks the scripts too.
 
 Managed by other tools. Do not edit by hand:
 
 - `.agents/`, `.claude/`, `.cortex/`, `skills-lock.json`: agent skills
   installed with the `skills` CLI. Update them with that CLI only.
-- `package-lock.json`: change it through `npm install`.
+- `pnpm-lock.yaml`: change it through `pnpm install` / `pnpm add`.
 
 The branch `legacy-main` holds the site that lived here until 2013. Leave it
 alone.
@@ -46,16 +61,17 @@ alone.
 
 | Command | What it does |
 | --- | --- |
-| `npm run dev` | Homepage dev server (http://localhost:4321). Drafts are shown. |
-| `npm run deck -- <slug>` | Slidev dev server for one deck (http://localhost:3030). |
-| `npm run new:deck -- <slug> "Title"` | Create a deck from the template, as a draft. |
-| `npm run check` | Validate every deck, then type-check the Astro site. |
-| `npm run build` | Build the homepage, then every published deck, into `dist/`. |
-| `npm run preview` | Serve `dist/` exactly as it will be published. |
+| `pnpm install` | Install dependencies. |
+| `pnpm dev` | Homepage dev server (http://localhost:4321). Drafts are shown. |
+| `pnpm deck <slug>` | Slidev dev server for one deck (http://localhost:3030). |
+| `pnpm new:deck <slug> "Title"` | Create a deck from the template, as a draft. |
+| `pnpm check` | Validate every deck, then type-check the site and scripts. |
+| `pnpm build` | Build the homepage, then every published deck, into `dist/`. |
+| `pnpm preview` | Serve `dist/` exactly as it will be published. |
 
-Deck links on the homepage only work after `npm run build`, because decks are
+Deck links on the homepage only work after `pnpm build`, because decks are
 built by Slidev, not by the Astro dev server. To review the whole site, run
-`npm run build && npm run preview`.
+`pnpm build && pnpm preview`.
 
 ## Skills and docs to use
 
@@ -63,7 +79,7 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
   slides, and the matching file in `.agents/skills/slidev/references/` for the
   feature in question (layouts, animations, code blocks, diagrams, export).
   Prefer what the skill documents over memory.
-- **Slidev MCP**: while `npm run deck -- <slug>` is running, slide-level tools
+- **Slidev MCP**: while `pnpm deck <slug>` is running, slide-level tools
   are available at `http://localhost:3030/__mcp`. Use them for inserting,
   moving and removing slides. See `references/tool-mcp.md`.
 - **Astro**: the Astro docs MCP server is configured in `.mcp.json`
@@ -75,14 +91,14 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
    `2026-building-a-provider`. The slug is the public URL. **Never rename a
    deck folder after it has been published**; links people have shared would
    break.
-2. Run `npm run new:deck -- <slug> "Deck title"`.
+2. Run `pnpm new:deck <slug> "Deck title"`.
 3. Fill in the headmatter (see below) and write the slides in
-   `decks/<slug>/slides.md`. Preview with `npm run deck -- <slug>`.
+   `decks/<slug>/slides.md`. Preview with `pnpm deck <slug>`.
 4. Put images next to the deck (`decks/<slug>/images/…`) and reference them
    with relative paths. Split long decks with `src:` imports into
    `decks/<slug>/pages/`.
 5. When it is ready to publish, set `card.draft: false`.
-6. Run `npm run check && npm run build`. Both must pass.
+6. Run `pnpm check && pnpm build`. Both must pass.
 7. Commit. Pushing to `main` publishes it.
 
 ### Headmatter
@@ -115,7 +131,7 @@ only by this site.
 
 ### Deck rules
 
-`npm run check` enforces these, and the build refuses a deck that breaks them:
+`pnpm check` enforces these, and the build refuses a deck that breaks them:
 
 - The folder name matches `<year>-<short-title>`, and the year equals the year
   of `card.date`.
@@ -132,12 +148,15 @@ instead, add `decks/<slug>/cover.png` (or `.jpg`, `.webp`) at 16:9, at least
 960 px wide. One way to make it from the first slide:
 
 ```bash
-npm install --no-save playwright-chromium
-npx slidev export decks/<slug>/slides.md --format png --range 1 --output decks/<slug>/cover
+pnpm add -D playwright-chromium
+pnpm exec playwright install chromium
+pnpm exec slidev export decks/<slug>/slides.md --format png --range 1 --output decks/<slug>/cover
 ```
 
 Check where Slidev wrote the PNG, move it to `decks/<slug>/cover.png`, and
-commit only that file.
+commit only that file; revert the `playwright-chromium` dependency afterwards.
+These steps have not been run in this repository yet. If they need adjusting,
+correct this section in the same commit.
 
 ### Content rules
 
@@ -157,10 +176,10 @@ commit only that file.
 - **Wall layout, filters, empty slots**: `src/components/DeckWall.astro`.
   Filter buttons appear on their own once decks of more than one type exist.
   The dashed empty slots disappear once there are three decks.
-- **A new deck type**: add it to `DECK_TYPES` in `scripts/lib/decks.mjs` and
+- **A new deck type**: add it to `DECK_TYPES` in `scripts/lib/decks.ts` and
   give it a label in `typeLabels` in `src/site.config.ts`.
-- **A new field on the card**: read it in `readDeck()` in
-  `scripts/lib/decks.mjs`, add it to the loader and schema in
+- **A new field on the card**: add it to the `Deck` interface and `readDeck()`
+  in `scripts/lib/decks.ts`, add it to the loader and schema in
   `src/content.config.ts`, then render it in `DeckCard.astro`. Document it in
   the headmatter section above.
 
@@ -187,7 +206,7 @@ add a property to the theme contract instead, and update this list.
 
 Each deck chooses its own Slidev theme with `theme:` in its headmatter. Theme
 packages are installed once at the repository root, for example
-`npm install @slidev/theme-seriph`. A theme that is not installed makes the CI
+`pnpm add @slidev/theme-seriph`. A theme that is not installed makes the CI
 build fail, so install it in the same commit that first uses it.
 
 ## Adding other kinds of content
@@ -203,8 +222,8 @@ file with the rules for writing one.
 `.github/workflows/deploy.yml` runs on every pull request (check and build)
 and on every push to `main` (check, build, deploy to GitHub Pages).
 
-- `npm run build` runs `astro build` (homepage into `dist/`) and then
-  `scripts/build-decks.mjs` (each published deck into `dist/decks/<slug>/`).
+- `pnpm build` runs `astro build` (homepage into `dist/`) and then
+  `scripts/build-decks.ts` (each published deck into `dist/decks/<slug>/`).
 - The workflow passes `SITE_URL` and `BASE_PATH` from
   `actions/configure-pages`, so the site works at a domain root or under a
   sub-path. Always build internal links from `import.meta.env.BASE_URL` in
@@ -213,19 +232,25 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 
 ### Dependencies
 
-- Node.js 22.12 or newer (`.nvmrc`). Use npm.
+- Node.js 22.18 or newer (`.nvmrc`), because scripts rely on Node running
+  TypeScript directly.
+- Add packages with `pnpm add <name>` (or `pnpm add -D`). pnpm holds back
+  versions published in the last few days; prefer a slightly older version
+  over adding entries to `minimumReleaseAgeExclude`.
+- pnpm blocks dependency install scripts. If a new dependency needs one, add
+  it to `allowBuilds` in `pnpm-workspace.yaml` after checking what it runs.
 - Dependabot opens weekly update pull requests. Merge them only when the
   workflow is green.
-- `package.json` has an `overrides` entry pinning `magic-string` 1.x to
-  `1.4.2`. Version 1.4.3 breaks every Slidev build through UnoCSS
+- `pnpm-workspace.yaml` has an `overrides` entry pinning `magic-string` 1.x
+  to `1.4.2`. Version 1.4.3 breaks every Slidev build through UnoCSS
   ([unocss#5373](https://github.com/unocss/unocss/issues/5373),
   [slidev#2768](https://github.com/slidevjs/slidev/issues/2768)). Remove the
-  override once a fixed UnoCSS is released, and confirm with `npm run build`.
+  override once a fixed UnoCSS is released, and confirm with `pnpm build`.
 
 ## Before you finish
 
-- `npm run check` and `npm run build` both pass.
-- For visual changes, look at the result with `npm run preview` in light and
+- `pnpm check` and `pnpm build` both pass.
+- For visual changes, look at the result with `pnpm preview` in light and
   dark, at phone and desktop widths.
 - No files changed under `.agents/`, `.claude/`, `.cortex/`, or in
   `skills-lock.json`, unless the task was to update skills.

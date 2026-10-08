@@ -1,0 +1,11 @@
+# pnpm settings for this repository (a single package, not a monorepo).
+
+overrides:
+  # magic-string 1.4.3 breaks every Slidev build through UnoCSS
+  # (https://github.com/unocss/unocss/issues/5373). Remove this once a fixed
+  # UnoCSS is released, then confirm with `pnpm build`.
+  magic-string@^1.4.0: 1.4.2
+
+# Dependencies allowed to run install scripts. pnpm blocks all others.
+allowBuilds:
+  esbuild: true

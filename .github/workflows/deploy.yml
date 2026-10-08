@@ -25,16 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Installs the pnpm version named in package.json ("packageManager").
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Check decks and types
-        run: npm run check
+        run: pnpm check
 
       # Tells us where Pages will serve the site, so the same source works at
       # the domain root or under /<repo>/ without hard-coding either.
@@ -44,7 +47,7 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Build site and decks
-        run: npm run build
+        run: pnpm build
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}

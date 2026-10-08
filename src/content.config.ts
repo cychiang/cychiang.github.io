@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { DECK_TYPES, listDecks } from '../scripts/lib/decks.mjs';
+import { DECK_TYPES, listDecks } from '../scripts/lib/decks.ts';
 
 // The `decks` collection is read straight from decks/<slug>/slides.md, so a
 // deck's headmatter is the only place its title, date and type are written.

@@ -2,42 +2,58 @@
 // Used by the Astro content collection (src/content.config.ts) and by every
 // script in scripts/. A deck is a folder decks/<slug>/ containing slides.md;
 // everything the site shows about it comes from that file's headmatter.
+//
+// Scripts are run directly by Node (type stripping), so this file sticks to
+// erasable TypeScript: no enums, no parameter properties, `import type` only.
 
 import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { load } from '@slidev/parser/fs';
 import { parse as parseYaml } from 'yaml';
 
-/** Repo root. Every npm script runs from here. */
+/** Repo root. Every package script runs from here. */
 export const ROOT = process.cwd();
 export const DECKS_DIR = path.join(ROOT, 'decks');
+
+/** Slidev's CLI entry, for scripts that start a build or a dev server. */
+export const SLIDEV_BIN = path.join(ROOT, 'node_modules', '@slidev', 'cli', 'bin', 'slidev.mjs');
 
 /** <year>-<kebab-title>, e.g. 2026-building-a-provider. It becomes the URL. */
 export const SLUG_PATTERN = /^\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** Allowed values for `card.type`. Add a new kind here, nowhere else. */
-export const DECK_TYPES = /** @type {const} */ (['talk', 'case-study', 'note', 'open-source']);
+export const DECK_TYPES = ['talk', 'case-study', 'note', 'open-source'] as const;
+export type DeckType = (typeof DECK_TYPES)[number];
 
-/**
- * @typedef {object} Deck
- * @property {string} slug        Folder name and URL segment.
- * @property {string} entry       Absolute path to slides.md.
- * @property {string} title
- * @property {string} description Plain-text summary (from `info`).
- * @property {string} date        ISO date, YYYY-MM-DD.
- * @property {string} type        One of DECK_TYPES.
- * @property {string} [event]     Where it was given, if anywhere.
- * @property {string[]} tags
- * @property {boolean} draft      Drafts are skipped by production builds.
- * @property {Record<string, string>} links  Extra links: video, repo, post.
- * @property {number} slides      Slide count.
- * @property {string} [routerMode]
- */
+export interface Deck {
+  /** Folder name and URL segment. */
+  slug: string;
+  /** Absolute path to slides.md. */
+  entry: string;
+  title: string;
+  /** Plain-text summary, from `info`. */
+  description: string;
+  /** ISO date, YYYY-MM-DD. */
+  date: string;
+  /** One of DECK_TYPES once validated; whatever was written until then. */
+  type: string;
+  /** Where it was given, if anywhere. */
+  event?: string;
+  tags: string[];
+  /** Drafts are skipped by production builds. */
+  draft: boolean;
+  /** Extra links: video, repo, post. */
+  links: Record<string, string>;
+  /** Slide count. */
+  slides: number;
+  routerMode?: string;
+}
 
 const HEADMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
 
 /** Strip the light Markdown that Slidev's `info` field tends to contain. */
-function toPlainText(value) {
+function toPlainText(value: unknown): string {
   return String(value ?? '')
     .replace(/^#+\s+.*$/gm, '')
     .replace(/[*_`]/g, '')
@@ -46,31 +62,28 @@ function toPlainText(value) {
     .trim();
 }
 
-/** YAML turns a bare 2026-10-08 into a string here, but be lenient. */
-function toIsoDate(value) {
+function toIsoDate(value: unknown): string {
   if (value instanceof Date) return value.toISOString().slice(0, 10);
   return typeof value === 'string' ? value.trim() : '';
 }
 
-async function countSlides(entry) {
-  // Slidev's own parser resolves `src:` imports and compound separators, so the
-  // number matches what the audience sees.
-  const { load } = await import('@slidev/parser/fs');
-  const data = await load(path.dirname(entry), entry);
+/**
+ * Slidev's own parser resolves `src:` imports and compound separators, so the
+ * number matches what the audience sees.
+ */
+async function countSlides(entry: string): Promise<number> {
+  const deckRoot = path.dirname(entry);
+  const data = await load({ roots: [deckRoot], userRoot: deckRoot }, entry);
   return data.slides.length;
 }
 
-/**
- * Read one deck.
- * @param {string} slug
- * @returns {Promise<Deck>}
- */
-export async function readDeck(slug) {
+/** Read one deck. */
+export async function readDeck(slug: string): Promise<Deck> {
   const entry = path.join(DECKS_DIR, slug, 'slides.md');
   const source = await readFile(entry, 'utf8');
   const match = source.match(HEADMATTER);
-  const head = (match ? parseYaml(match[1]) : null) ?? {};
-  const card = head.card ?? {};
+  const head: Record<string, any> = (match ? parseYaml(match[1] ?? '') : null) ?? {};
+  const card: Record<string, any> = head.card ?? {};
 
   return {
     slug,
@@ -90,11 +103,8 @@ export async function readDeck(slug) {
   };
 }
 
-/**
- * Every deck in decks/, newest first.
- * @returns {Promise<Deck[]>}
- */
-export async function listDecks() {
+/** Every deck in decks/, newest first. */
+export async function listDecks(): Promise<Deck[]> {
   if (!existsSync(DECKS_DIR)) return [];
   const entries = await readdir(DECKS_DIR, { withFileTypes: true });
   const slugs = entries
@@ -106,21 +116,22 @@ export async function listDecks() {
 
 /**
  * The rules every deck has to meet before it can be published.
- * @param {Deck} deck
- * @returns {string[]} Human-readable problems; empty when the deck is fine.
+ * Returns human-readable problems; empty when the deck is fine.
  */
-export function validateDeck(deck) {
-  const problems = [];
+export function validateDeck(deck: Deck): string[] {
+  const problems: string[] = [];
   if (!SLUG_PATTERN.test(deck.slug)) {
-    problems.push(`folder name must look like 2026-short-title (lowercase, digits, hyphens)`);
+    problems.push('folder name must look like 2026-short-title (lowercase, digits, hyphens)');
   }
   if (!deck.title) problems.push('`title` is missing from the headmatter');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(deck.date) || Number.isNaN(Date.parse(deck.date))) {
     problems.push('`card.date` must be a date like 2026-10-08');
   } else if (SLUG_PATTERN.test(deck.slug) && !deck.slug.startsWith(deck.date.slice(0, 4))) {
-    problems.push(`folder name starts with ${deck.slug.slice(0, 4)} but \`card.date\` is in ${deck.date.slice(0, 4)}`);
+    problems.push(
+      `folder name starts with ${deck.slug.slice(0, 4)} but \`card.date\` is in ${deck.date.slice(0, 4)}`,
+    );
   }
-  if (!DECK_TYPES.includes(/** @type {any} */ (deck.type))) {
+  if (!(DECK_TYPES as readonly string[]).includes(deck.type)) {
     problems.push(`\`card.type\` must be one of: ${DECK_TYPES.join(', ')}`);
   }
   if (deck.routerMode !== 'hash') {
@@ -130,9 +141,9 @@ export function validateDeck(deck) {
 }
 
 /**
- * Join the site base path (from BASE_PATH) with a path inside the site.
- * @param {string} pathname  e.g. "decks/2026-hello-world/"
+ * Join the site base path (from BASE_PATH) with a path inside the site,
+ * e.g. withBase('decks/2026-hello-world/').
  */
-export function withBase(pathname, base = process.env.BASE_PATH || '/') {
+export function withBase(pathname: string, base: string = process.env.BASE_PATH || '/'): string {
   return `${base.replace(/\/+$/, '')}/${pathname.replace(/^\/+/, '')}`;
 }

@@ -1,5 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "src/**/*", "scripts/**/*", "astro.config.mjs"],
+  "compilerOptions": {
+    // scripts/ is run directly by Node, which strips types but cannot compile
+    // enums, namespaces or parameter properties.
+    "erasableSyntaxOnly": true,
+    "noUncheckedIndexedAccess": true,
+    "types": ["node"]
+  },
+  "include": [".astro/types.d.ts", "src/**/*", "scripts/**/*", "astro.config.ts"],
   "exclude": ["dist", "decks"]
 }

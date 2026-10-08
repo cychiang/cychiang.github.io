@@ -1,5 +1,5 @@
 // Validate every deck's folder name and headmatter. Exits non-zero on problems.
-import { listDecks, validateDeck } from './lib/decks.mjs';
+import { listDecks, validateDeck } from './lib/decks.ts';
 
 const decks = await listDecks();
 let failed = 0;

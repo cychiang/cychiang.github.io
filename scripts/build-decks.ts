@@ -1,10 +1,9 @@
 // Build every published deck into dist/decks/<slug>/ so it is served next to
-// the Astro site. Run after `astro build` (see the `build` npm script).
+// the Astro site. Run after `astro build` (see the `build` package script).
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { ROOT, listDecks, validateDeck, withBase } from './lib/decks.mjs';
+import { ROOT, SLIDEV_BIN, listDecks, validateDeck, withBase } from './lib/decks.ts';
 
-const slidev = path.join(ROOT, 'node_modules', '@slidev', 'cli', 'bin', 'slidev.mjs');
 const decks = (await listDecks()).filter((deck) => !deck.draft);
 
 for (const deck of decks) {
@@ -22,7 +21,7 @@ for (const deck of decks) {
   console.log(`\nBuilding decks/${deck.slug} -> ${base}`);
   const result = spawnSync(
     process.execPath,
-    [slidev, 'build', deck.entry, '--base', base, '--out', out],
+    [SLIDEV_BIN, 'build', deck.entry, '--base', base, '--out', out],
     { cwd: ROOT, stdio: 'inherit' },
   );
   if (result.status !== 0) process.exit(result.status ?? 1);
