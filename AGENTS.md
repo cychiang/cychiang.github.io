@@ -28,7 +28,7 @@ design/templates/          specimen deck and diagram templates (not published)
 src/site.config.ts         site name, homepage copy, header links, type labels
 src/content.config.ts      the `decks` content collection (reads decks/)
 src/pages/                 Astro pages (index, 404)
-src/components/            DeckWall, DeckCard, Terminal (live prompt) and Prompt
+src/components/            DeckWall, DeckCard, Prompt and PromptPrefix
 src/layouts/Base.astro     html shell, header, footer
 src/styles/global.css      imports the design tokens; homepage layout values
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
@@ -263,13 +263,11 @@ has the vocabulary. Rules specific to the homepage:
   the command whose "output" follows. The prompt is decoration and is hidden
   from screen readers, so every section also needs a real heading (it may be
   `visually-hidden`) or an `aria-label`. Commands must be plausible.
-- The prompt above the deck wall is live (`Terminal.astro`): `help`,
-  `ls [--type <kind>]`, `cat <name>`, `open <deck>` (or `cd`), `whoami`,
-  `clear`, with Tab completion and Up/Down history. Everything a command does
-  must also be possible with mouse or touch elsewhere on the page. Keep
-  commands few and real-looking; list new ones in `help`. It must not take
-  focus on load, and the page must still read correctly without JavaScript.
-  Deck names and kinds come from the `decks` collection, never hard-coded.
+- The prompt lines are static. An interactive prompt (typing `ls`, `open
+  <deck>` and so on) was tried and removed until there is enough content to
+  make it worth having; if it comes back, everything a command does must
+  also be possible with mouse or touch, it must not take focus on load, and
+  the page must still work without JavaScript.
 - Decks are panes: path in the title bar, slide in the body, date and length
   in the status line.
 - Lowercase for labels that mimic commands, paths and flags (`github`,
