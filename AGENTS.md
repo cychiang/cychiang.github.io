@@ -56,8 +56,11 @@ pnpm-workspace.yaml        pnpm settings, workspace packages, overrides
 
 Managed by other tools. Do not edit by hand:
 
-- `.agents/`, `.claude/`, `.cortex/`, `skills-lock.json`: agent skills
-  installed with the `skills` CLI. Update them with that CLI only.
+- `skills-lock.json` and `.agents/skills/slidev/`: a skill installed with
+  the `skills` CLI; update it with that CLI only. The repository's own
+  skills (`terminal-design`, `deck-authoring`) live next to it and are
+  edited by hand; `.claude/skills/` and `.cortex/skills/` are symlinks to
+  `.agents/skills/`, so a new skill needs a symlink in each.
 - `pnpm-lock.yaml`: change it through `pnpm install` / `pnpm add`.
 - `design/generated/` and `public/favicon.svg`: written by `pnpm design:build`
   from `design/tokens.ts`. Edit the tokens, then regenerate.
@@ -86,6 +89,11 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
 
 ## Skills and docs to use
 
+- **`deck-authoring`** (`.agents/skills/deck-authoring/SKILL.md`): the
+  working order for creating or editing a deck. Use it for any slides.
+- **`terminal-design`** (`.agents/skills/terminal-design/SKILL.md`): the
+  procedure for any visual change or style audit. Use it before touching
+  colours, type, components, layouts or diagram styling.
 - **Slidev**: read `.agents/skills/slidev/SKILL.md` before writing or editing
   slides, and the matching file in `.agents/skills/slidev/references/` for the
   feature in question (layouts, animations, code blocks, diagrams, export).

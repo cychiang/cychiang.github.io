@@ -7,23 +7,13 @@
 import type { MermaidConfig } from 'mermaid';
 import { color, font, shape } from './tokens.ts';
 
-/**
- * Semantic node classes. Use them with `:::name` in a diagram, for example
- * `api[API]:::focus`. Anything else keeps the plain pane look.
- */
-export const diagramClasses = {
-  focus: 'the subject of the slide (accent border and text)',
-  ok: 'healthy or desired state (prompt green)',
-  warn: 'degraded, pending or worth watching (flag yellow)',
-  fail: 'failed or forbidden (danger red)',
-  ext: 'outside the system being described (dashed, soft)',
-  store: 'data at rest: databases, buckets, queues (surface fill, strong border)',
-} as const;
+// Semantic node classes (`:::focus`, `:::ok`, `:::warn`, `:::fail`, `:::ext`,
+// `:::store`) are styled below and documented in design/README.md.
 
 const c = (name: string) => `var(--color-${name})`;
 
 /** Styles injected into every rendered SVG. */
-export const themeCSS = `
+const themeCSS = `
   svg { font-family: ${font.stack} !important; max-width: none !important; width: 100% !important; height: 100% !important; }
   text, tspan, .label, .nodeLabel, .edgeLabel, .cluster-label, .messageText, .noteText,
   .actor > tspan, .labelText, .loopText, .sectionTitle, .titleText, .legend {

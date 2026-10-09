@@ -5,9 +5,5 @@
   "description": "Local Slidev addon applied to every deck in this repository: the way back to the homepage.",
   "keywords": [
     "slidev-addon"
-  ],
-  "dependencies": {
-    "@slidev/types": "^53.0.0",
-    "vue": "^3.5.43"
-  }
+  ]
 }

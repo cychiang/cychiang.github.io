@@ -213,14 +213,7 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@6.0.3)
 
-  slidev-addon-site:
-    dependencies:
-      '@slidev/types':
-        specifier: ^53.0.0
-        version: 53.0.0(@modelcontextprotocol/server@2.3.1)(@nuxt/kit@3.21.11(magicast@0.5.5))(@vue/compiler-sfc@3.5.43)(cac@7.0.0)(esbuild@0.28.2)(rolldown@1.2.13)(srvx@1.0.5)(typescript@6.0.3)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
-      vue:
-        specifier: ^3.5.43
-        version: 3.5.43(typescript@6.0.3)
+  slidev-addon-site: {}
 
 packages:
 
