@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// A link back to the homepage, on every slide of every deck. Without it the
+// A link back to the homepage, top-right on every slide of every deck (the
+// theme's cover uses the top-left for its prompt line). Without it the
 // only way out of a deck is the browser's back button, once per slide viewed.
 // Hidden where it would get in the way: presenter view, exports, embeds.
 import { useNav } from '@slidev/client'
@@ -26,17 +27,17 @@ const { isPrintMode, isPresenter, isEmbedded } = useNav()
 /* Inherits the slide's text colour, so it works on any Slidev theme. */
 .site-home {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  right: 12px;
   z-index: 20;
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 4px 10px 4px 6px;
-  border-radius: 999px;
+  border-radius: var(--radius, 4px);
   color: inherit;
-  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 12px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.78rem;
   line-height: 1.4;
   text-decoration: none;
   opacity: 0.55;

@@ -1,0 +1,38 @@
+/* GENERATED from design/tokens.ts by `pnpm design:build`. Do not edit. */
+
+:root {
+  color-scheme: light dark;
+  --color-bg: #f3f4f6;
+  --color-surface: #fbfbfc;
+  --color-ink: #1c2028;
+  --color-ink-soft: #5d6673;
+  --color-line: #cdd2da;
+  --color-accent: #2452c9;
+  --color-on-accent: #ffffff;
+  --color-prompt: #1f7a3a;
+  --color-flag: #8a6100;
+  --color-danger: #b3261e;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --weight-regular: 400;
+  --weight-strong: 600;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --radius: 4px;
+  --border: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #161a22;
+    --color-surface: #1d222c;
+    --color-ink: #dfe3ea;
+    --color-ink-soft: #8b94a3;
+    --color-line: #323a48;
+    --color-accent: #7aa7ff;
+    --color-on-accent: #0f131a;
+    --color-prompt: #8fd694;
+    --color-flag: #e6c36a;
+    --color-danger: #ff8e84;
+  }
+}

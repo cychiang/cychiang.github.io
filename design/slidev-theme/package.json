@@ -1,0 +1,29 @@
+{
+  "name": "slidev-theme-terminal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The terminal theme for every deck in this repository. Colours and type come from design/tokens.ts.",
+  "keywords": ["slidev-theme", "slidev"],
+  "engines": {
+    "node": ">=22.18.0",
+    "slidev": ">=53.0.0"
+  },
+  "slidev": {
+    "colorSchema": "both",
+    "defaults": {
+      "fonts": {
+        "sans": "IBM Plex Mono",
+        "serif": "IBM Plex Mono",
+        "mono": "IBM Plex Mono",
+        "provider": "none"
+      },
+      "favicon": "favicon.svg",
+      "transition": false,
+      "lineNumbers": false
+    }
+  },
+  "dependencies": {
+    "@slidev/types": "^53.0.0",
+    "vue": "^3.5.43"
+  }
+}

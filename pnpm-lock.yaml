@@ -178,12 +178,15 @@ importers:
       '@slidev/parser':
         specifier: ^53.0.0
         version: 53.0.0(@modelcontextprotocol/server@2.3.1)(@nuxt/kit@3.21.11(magicast@0.5.5))(@vue/compiler-sfc@3.5.43)(cac@7.0.0)(esbuild@0.28.2)(rolldown@1.2.13)(srvx@1.0.5)(typescript@6.0.3)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
-      '@slidev/theme-default':
-        specifier: ^0.25.0
-        version: 0.25.0
       astro:
         specifier: ^7.3.0
         version: 7.3.6(@types/node@22.20.5)(jiti@2.7.0)(yaml@2.9.1)
+      slidev-addon-site:
+        specifier: workspace:*
+        version: link:slidev-addon-site
+      slidev-theme-terminal:
+        specifier: workspace:*
+        version: link:design/slidev-theme
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@6.0.3)
@@ -200,6 +203,24 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+
+  design/slidev-theme:
+    dependencies:
+      '@slidev/types':
+        specifier: ^53.0.0
+        version: 53.0.0(@modelcontextprotocol/server@2.3.1)(@nuxt/kit@3.21.11(magicast@0.5.5))(@vue/compiler-sfc@3.5.43)(cac@7.0.0)(esbuild@0.28.2)(rolldown@1.2.13)(srvx@1.0.5)(typescript@6.0.3)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+      vue:
+        specifier: ^3.5.43
+        version: 3.5.43(typescript@6.0.3)
+
+  slidev-addon-site:
+    dependencies:
+      '@slidev/types':
+        specifier: ^53.0.0
+        version: 53.0.0(@modelcontextprotocol/server@2.3.1)(@nuxt/kit@3.21.11(magicast@0.5.5))(@vue/compiler-sfc@3.5.43)(cac@7.0.0)(esbuild@0.28.2)(rolldown@1.2.13)(srvx@1.0.5)(typescript@6.0.3)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+      vue:
+        specifier: ^3.5.43
+        version: 3.5.43(typescript@6.0.3)
 
 packages:
 
@@ -1390,14 +1411,6 @@ packages:
   '@slidev/rough-notation@0.1.0':
     resolution: {integrity: sha512-a/CbVmjuoO3E4JbUr2HOTsXndbcrdLWOM+ajbSQIY3gmLFzhjeXHGksGcp1NZ08pJjLZyTCxfz1C7v/ltJqycA==}
 
-  '@slidev/theme-default@0.25.0':
-    resolution: {integrity: sha512-iWvthH1Ny+i6gTwRnEeeU+EiqsHC56UdEO45bqLSNmymRAOWkKUJ/M0o7iahLzHSXsiPu71B7C715WxqjXk2hw==}
-    engines: {node: '>=14.0.0', slidev: '>=v0.47.0'}
-
-  '@slidev/types@0.47.5':
-    resolution: {integrity: sha512-X67V4cCgM0Sz50bP8GbVzmiL8DHC2IXvdKcsN7DlxHyf+/T4d9GveeGukwha5Fx3MuYeGZWKag7TFL2ZY4w54A==}
-    engines: {node: '>=18.0.0'}
-
   '@slidev/types@53.0.0':
     resolution: {integrity: sha512-Iyr37tIJAC65lTLgFim+5c5iqNAaj7NfkcFUzu8yqxY9SAeuFyk7rB8MBc/VC4JVpPVaahVO+35EX+wPY6BAeg==}
     engines: {node: '>=22.12.0'}
@@ -2036,9 +2049,6 @@ packages:
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
-
-  codemirror-theme-vars@0.1.2:
-    resolution: {integrity: sha512-WTau8X2q58b0SOAY9DO+iQVw8JKVEgyQIqArp2D732tcc+pobbMta3bnVMdQdmgwuvNrOFFr6HoxPRoQOgooFA==}
 
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
@@ -3392,9 +3402,6 @@ packages:
     resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
     engines: {node: '>=14'}
     hasBin: true
-
-  prism-theme-vars@0.2.5:
-    resolution: {integrity: sha512-/D8gBTScYzi9afwE6v3TC1U/1YFZ6k+ly17mtVRdLpGy7E79YjJJWkXFgUDHJ2gDksV/ZnXF7ydJ4TvoDm2z/Q==}
 
   prismjs@1.30.0:
     resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
@@ -5537,14 +5544,6 @@ snapshots:
     dependencies:
       roughjs: 4.6.6
 
-  '@slidev/theme-default@0.25.0':
-    dependencies:
-      '@slidev/types': 0.47.5
-      codemirror-theme-vars: 0.1.2
-      prism-theme-vars: 0.2.5
-
-  '@slidev/types@0.47.5': {}
-
   '@slidev/types@53.0.0(@modelcontextprotocol/server@2.3.1)(@nuxt/kit@3.21.11(magicast@0.5.5))(@vue/compiler-sfc@3.5.43)(cac@7.0.0)(esbuild@0.28.2)(rolldown@1.2.13)(srvx@1.0.5)(typescript@6.0.3)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@antfu/utils': 9.3.0
@@ -6502,8 +6501,6 @@ snapshots:
       is-regexp: 3.1.0
 
   clsx@2.1.1: {}
-
-  codemirror-theme-vars@0.1.2: {}
 
   colorette@2.0.20: {}
 
@@ -7970,8 +7967,6 @@ snapshots:
       jszip: 3.10.2
 
   prettier@3.9.9: {}
-
-  prism-theme-vars@0.2.5: {}
 
   prismjs@1.30.0: {}
 

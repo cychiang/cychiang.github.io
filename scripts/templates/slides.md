@@ -1,5 +1,5 @@
 ---
-theme: default
+theme: terminal
 title: "__TITLE__"
 info: |
   One or two sentences saying what this deck covers and who it is for.

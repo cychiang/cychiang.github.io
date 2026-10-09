@@ -1,0 +1,218 @@
+/* Base typography for every slide. Values come from the design tokens;
+   only slide-specific sizes are set here. */
+
+:root {
+  /* Slide type scale (the canvas is 980px wide; ~70 characters per line). */
+  --slide-text: 1.2rem;
+  --slide-small: 0.95rem;
+  --slide-h1: 2.1rem;
+  --slide-h2: 1.5rem;
+  --slide-display: 3.4rem;
+  --slide-pad-x: 3.5rem;
+  --slide-pad-y: 2.75rem;
+  --slide-status: 1.75rem;
+}
+
+html,
+body,
+#app,
+#page-root,
+.slidev-page {
+  background: var(--color-bg);
+}
+
+.slidev-layout {
+  height: 100%;
+  padding: var(--slide-pad-y) var(--slide-pad-x) calc(var(--slide-pad-y) + var(--slide-status) * 0.6);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-regular);
+  font-size: var(--slide-text);
+  line-height: 1.6;
+  font-variant-ligatures: none;
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4 {
+  margin: 0 0 0.75em;
+  font-weight: var(--weight-strong);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.slidev-layout h1 {
+  font-size: var(--slide-h1);
+  padding-bottom: 0.45em;
+  border-bottom: var(--border) solid var(--color-line);
+}
+
+.slidev-layout h1 + p {
+  margin-top: -0.25em;
+  color: var(--color-ink-soft);
+}
+
+.slidev-layout h2 {
+  font-size: var(--slide-h2);
+}
+
+.slidev-layout h3,
+.slidev-layout h4 {
+  font-size: 1.1em;
+}
+
+.slidev-layout p {
+  margin: 0.8em 0;
+}
+
+/* Lists are plain text: a dash, a number. */
+.slidev-layout ul,
+.slidev-layout ol {
+  margin: 0.8em 0;
+  padding-left: 2ch;
+  list-style: none;
+}
+
+.slidev-layout li {
+  position: relative;
+  margin: 0.25em 0;
+}
+
+.slidev-layout ul > li::before {
+  content: '-';
+  position: absolute;
+  left: -2ch;
+  color: var(--color-ink-soft);
+}
+
+.slidev-layout ol {
+  counter-reset: item;
+}
+
+.slidev-layout ol > li {
+  counter-increment: item;
+}
+
+.slidev-layout ol > li::before {
+  content: counter(item) '.';
+  position: absolute;
+  left: -2.5ch;
+  color: var(--color-ink-soft);
+}
+
+.slidev-layout ul ul,
+.slidev-layout ol ul {
+  margin: 0.25em 0;
+}
+
+.slidev-layout a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border: 0;
+}
+
+.slidev-layout a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.slidev-layout strong,
+.slidev-layout b {
+  font-weight: var(--weight-strong);
+}
+
+.slidev-layout em {
+  font-style: italic;
+}
+
+/* A quote is a quoted line, as in a reply. */
+.slidev-layout blockquote {
+  margin: 1em 0;
+  padding: 0 0 0 2ch;
+  border: 0;
+  border-left: var(--border) solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 1em;
+}
+
+.slidev-layout blockquote > * {
+  margin: 0;
+}
+
+/* Tables look like column output. */
+.slidev-layout table {
+  width: 100%;
+  margin: 1em 0;
+  border-collapse: collapse;
+  font-size: var(--slide-small);
+}
+
+.slidev-layout th,
+.slidev-layout td {
+  padding: 0.4em 2ch 0.4em 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.slidev-layout th {
+  color: var(--color-ink-soft);
+  font-weight: var(--weight-regular);
+  border-bottom: var(--border) solid var(--color-line);
+}
+
+.slidev-layout tr + tr td {
+  border-top: var(--border) solid var(--color-line);
+}
+
+.slidev-layout hr {
+  margin: 1.25em 0;
+  border: 0;
+  border-top: var(--border) solid var(--color-line);
+}
+
+.slidev-layout kbd {
+  padding: 0 0.5ch;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+.slidev-layout img {
+  border-radius: var(--radius);
+}
+
+/* Colour carries meaning, so these are the only colour utilities. */
+.slidev-layout .ok { color: var(--color-prompt); }
+.slidev-layout .warn { color: var(--color-flag); }
+.slidev-layout .fail { color: var(--color-danger); }
+.slidev-layout .soft { color: var(--color-ink-soft); }
+
+/* A block cursor, for the end of a line that invites the next step. */
+.cursor::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 0.2em;
+  vertical-align: -0.1em;
+  background: var(--color-prompt);
+}
+
+/* Mermaid diagrams: let the SVG sit on the background, never in a box. */
+.slidev-layout .mermaid {
+  margin: 1em 0;
+}
+
+/* Slidev's own chrome follows the palette. */
+.slidev-icon-btn {
+  color: var(--color-ink-soft);
+}
+
+.slidev-icon-btn:hover {
+  color: var(--color-ink);
+}

@@ -1,6 +1,7 @@
 // Build every published deck into dist/decks/<slug>/ so it is served next to
 // the Astro site. Run after `astro build` (see the `build` package script).
 import { spawnSync } from 'node:child_process';
+import { copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ROOT, SLIDEV_BIN, listDecks, validateDeck, withBase } from './lib/decks.ts';
 
@@ -25,6 +26,8 @@ for (const deck of decks) {
     { cwd: ROOT, stdio: 'inherit' },
   );
   if (result.status !== 0) process.exit(result.status ?? 1);
+  // The theme's default favicon is `favicon.svg`, relative to the deck.
+  await copyFile(path.join(ROOT, 'public', 'favicon.svg'), path.join(out, 'favicon.svg'));
 }
 
 console.log(`\nBuilt ${decks.length} deck(s).`);

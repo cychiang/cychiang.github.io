@@ -1,0 +1,48 @@
+/* Code blocks are panes: surface, hairline border, the one radius. Colours
+   inside come from setup/shiki.ts, which also reads the tokens. */
+
+:root {
+  --slidev-code-background: var(--color-surface);
+  --slidev-code-foreground: var(--color-ink);
+  --slidev-code-font-family: var(--font-mono);
+  --slidev-code-font-size: 0.85em;
+  --slidev-code-line-height: 1.6;
+  --slidev-code-padding: 0.9em 1.1em;
+  --slidev-code-radius: var(--radius);
+  --slidev-code-margin: 1em 0;
+}
+
+.slidev-layout .slidev-code-wrapper {
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.slidev-layout pre.slidev-code,
+.slidev-layout .slidev-code {
+  background: transparent;
+}
+
+.slidev-layout :not(pre) > code {
+  padding: 0 0.4ch;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 0.9em;
+}
+
+.slidev-layout .slidev-code-block-title,
+.slidev-layout .slidev-code-group-tabs {
+  border-bottom: var(--border) solid var(--color-line);
+  color: var(--color-ink-soft);
+  font-size: 0.8em;
+}
+
+/* Line highlighting dims the rest instead of tinting the line. */
+.slidev-layout .slidev-code .line.highlighted {
+  background: transparent;
+}
+
+.slidev-layout .slidev-code.has-highlighted .line:not(.highlighted) {
+  opacity: 0.45;
+}

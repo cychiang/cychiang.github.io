@@ -1,0 +1,5 @@
+/* The system's one typeface, self-hosted. Regular, italic and strong only;
+   see `font` in design/tokens.ts. */
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/400-italic.css';
+@import '@fontsource/ibm-plex-mono/600.css';

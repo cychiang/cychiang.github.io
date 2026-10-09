@@ -1,0 +1,189 @@
+/* Layout-specific rules. The slide chrome itself is in base.css. */
+
+/* cover: prompt line at the top, title anchored bottom-left like a card on
+   the homepage. */
+.slidev-layout.cover {
+  display: flex;
+  flex-direction: column;
+}
+
+.slidev-layout.cover .cover-prompt {
+  margin: 0;
+  color: var(--color-ink-soft);
+}
+
+.slidev-layout.cover .cover-body {
+  margin-top: auto;
+}
+
+.slidev-layout.cover h1 {
+  max-width: 22ch;
+  margin: 0 0 0.35em;
+  padding: 0;
+  border: 0;
+  font-size: var(--slide-display);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.slidev-layout.cover h1::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.9em;
+  margin-left: 0.15em;
+  vertical-align: -0.08em;
+  background: var(--color-prompt);
+}
+
+.slidev-layout.cover h1 + p,
+.slidev-layout.cover p {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: var(--slide-text);
+}
+
+/* section: a chapter heading, bottom-left, with its number from the deck. */
+.slidev-layout.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.slidev-layout.section h1 {
+  max-width: 24ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--slide-display);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.slidev-layout.section h1 + p,
+.slidev-layout.section p {
+  margin: 0.5em 0 0;
+  color: var(--color-ink-soft);
+}
+
+/* center, statement, fact, quote: fall back to Slidev's built-in layouts,
+   restyled. */
+.slidev-layout.center,
+.slidev-layout.statement,
+.slidev-layout.fact,
+.slidev-layout.quote,
+.slidev-layout.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.slidev-layout.statement h1,
+.slidev-layout.fact h1,
+.slidev-layout.intro h1 {
+  padding: 0;
+  border: 0;
+  font-size: var(--slide-display);
+  line-height: 1.05;
+}
+
+.slidev-layout.fact h1 {
+  font-size: 5rem;
+}
+
+.slidev-layout.fact h1 + p,
+.slidev-layout.statement h1 + p {
+  font-size: var(--slide-text);
+}
+
+.slidev-layout.quote {
+  padding-left: calc(var(--slide-pad-x) + 2ch);
+}
+
+.slidev-layout.quote h1 {
+  padding: 0 0 0 2ch;
+  margin-left: -2ch;
+  border: 0;
+  border-left: var(--border) solid var(--color-line);
+  font-size: var(--slide-h2);
+  font-weight: var(--weight-regular);
+}
+
+/* two-cols, two-cols-header: a gap of a few characters. */
+.slidev-layout.two-cols,
+.slidev-layout.two-cols-header {
+  column-gap: 4ch;
+}
+
+/* diagram: a small title, then the picture centred in what is left. */
+.slidev-layout.diagram {
+  display: flex;
+  flex-direction: column;
+}
+
+.slidev-layout.diagram h1 {
+  font-size: var(--slide-h2);
+  padding-bottom: 0.4em;
+}
+
+.slidev-layout.diagram > .mermaid,
+.slidev-layout.diagram > p:has(> img) {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  margin: 0;
+}
+
+.slidev-layout.diagram > .mermaid svg,
+.slidev-layout.diagram > p > img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* end: the session closes. */
+.slidev-layout.end {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.slidev-layout.end h1 {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.slidev-layout.end p {
+  color: var(--color-ink-soft);
+}
+
+/* The status line at the bottom of every slide (global-top.vue). */
+.status-line {
+  position: absolute;
+  pointer-events: none;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 2ch;
+  height: var(--slide-status);
+  padding: 0 var(--slide-pad-x);
+  border-top: var(--border) solid var(--color-line);
+  color: var(--color-ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: var(--slide-status);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.status-line .status-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-line .status-page {
+  font-variant-numeric: tabular-nums;
+}
