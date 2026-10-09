@@ -151,6 +151,8 @@ title: Building a provider from scratch
 info: |
   One or two plain sentences. Shown under the card on the homepage.
 routerMode: hash          # required, see "Deck rules"
+themeConfig:              # optional: the prompt line (user@host:path$)
+  prompt: { user: cychiang, host: kubecon, path: "~" }
 card:
   date: 2026-09-12        # when it was given or written, YYYY-MM-DD
   type: talk              # talk | case-study | note | open-source
@@ -204,6 +206,13 @@ correct this section in the same commit.
   See them all with `pnpm design:preview`.
 - Components: `<Prompt>command</Prompt>` for a command that was run,
   `<Pane title="…">…</Pane>` for its output or any boxed content.
+- The prompt line (`user@host:path$`) on the cover and in `<Prompt>`
+  defaults to `cychiang@github.io:~$`. Change it for a deck with
+  `themeConfig.prompt` in the headmatter, for one cover slide with
+  `prompt:` in that slide's frontmatter (`prompt: "cmd"` sets only the
+  command, `prompt: false` hides the line), or for one `<Prompt>` with its
+  `user`, `host` and `path` attributes. The cover's default command is
+  `open <slug>`.
 - Colour classes: `.ok`, `.warn`, `.fail`, `.soft` on a `<span>`. No inline
   styles, no UnoCSS colour utilities.
 - One idea per slide; a one-line heading; at most eight lines of body or

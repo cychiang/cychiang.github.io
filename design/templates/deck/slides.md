@@ -5,6 +5,8 @@ info: |
   Every layout, component and diagram template of the terminal design system
   on one deck. Not published; preview with `pnpm design:preview`.
 routerMode: hash
+themeConfig:
+  prompt: { user: cychiang, host: specimen }
 card:
   date: 2026-10-09
   type: note
@@ -14,6 +16,15 @@ card:
 # Design specimen
 
 Every layout and component, as a reference
+
+---
+layout: cover
+prompt: { user: speaker, host: kubecon, path: ~/talks, command: ./start --live }
+---
+
+# A cover with its own prompt
+
+Set per slide, or for the whole deck in the headmatter
 
 ---
 
@@ -51,6 +62,8 @@ Inline `code` sits in a small pane of its own.
 # Commands and panes
 
 <Prompt>kubectl get managed</Prompt>
+
+<Prompt user="root" host="node-1" path="/var/log">tail -n 3 syslog</Prompt>
 
 <Pane title="output" status="3 objects">
 

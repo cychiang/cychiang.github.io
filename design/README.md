@@ -92,10 +92,19 @@ distances in multiples of the line height.
 
 ## Patterns
 
-**Prompt line.** `user@host:~$ command`. On the homepage it opens a section
-(`Prompt.astro`) or takes input (`Terminal.astro`); on slides it shows a
-command that was run (`<Prompt>`), and the cover's first line is
+**Prompt line.** `user@host:path$ command`. On the homepage it opens a
+section (`Prompt.astro`) or takes input (`Terminal.astro`); on slides it
+shows a command that was run (`<Prompt>`), and the cover's first line is
 `open <deck>`. Host and path are coloured, the command is plain ink.
+
+The parts come from three layers, most specific first: a slide's
+frontmatter (`prompt: { user, host, path, command }`, `prompt: "command"`
+or `prompt: false`), the deck's headmatter (`themeConfig.prompt`), then
+`prompt` in `tokens.ts`. The homepage always uses the tokens. Use the
+override when the deck is given somewhere specific (`host: kubecon`) or
+when a slide shows a command on another machine (`user: root`,
+`host: node-1`); keep the default otherwise, so the site reads as one
+session.
 
 **Pane.** A surface with a hairline border, `--radius` corners, an optional
 title bar (path or name, soft, `--text-xs`) and an optional status line. A
@@ -133,7 +142,10 @@ The theme lives in `slidev-theme/`:
   picture centred), `end`, plus Slidev's built-in `center`, `two-cols`,
   `two-cols-header`, `statement`, `fact`, `quote`, `image-*`, `iframe-*`,
   restyled.
-- **Components**: `<Prompt>cmd</Prompt>`, `<Pane title="…" status="…">`.
+- **Components**: `<Prompt>cmd</Prompt>` (optional `user`, `host`, `path`
+  attributes), `<Pane title="…" status="…">`.
+- **Cover prompt**: `prompt:` in the cover slide's frontmatter, or
+  `themeConfig.prompt` in the headmatter for the whole deck; see Patterns.
 - **Colour classes**: `.ok`, `.warn`, `.fail`, `.soft`. There are no others.
 - **Code**: Shiki with `terminal-light` / `terminal-dark` themes built from
   the tokens. Strings are prompt-green, keywords accent-blue, numbers
