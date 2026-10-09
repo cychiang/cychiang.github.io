@@ -21,9 +21,15 @@ Commands introduce sections. A block cursor marks where the next thing goes.
 What it is not: a retro CRT, green-on-black phosphor, scanlines, glitch
 effects, ASCII art banners. It is a modern terminal with a good font.
 
+The typeface is JetBrains Mono. It was chosen over IBM Plex Mono, Commit
+Mono and Iosevka after rendering the site and the specimen deck in each: its
+tall x-height keeps small text (status lines, pane bars, projected slides)
+readable, and its width matches the layouts, so nothing had to be re-set.
+Ligatures are disabled everywhere so code reads character by character.
+
 ## Principles
 
-1. **One typeface, two weights.** IBM Plex Mono, regular and strong. Italic
+1. **One typeface, two weights.** JetBrains Mono, regular and strong. Italic
    is for titles of things. There is no second family, ever.
 2. **Colour is meaning.** Each colour has one job (see Tokens). If a colour
    does not say prompt, open, warn, fail or data, it is not used.
@@ -71,7 +77,7 @@ the table.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--font-mono` | IBM Plex Mono, system monospace fallbacks | everything |
+| `--font-mono` | JetBrains Mono (variable), system monospace fallbacks | everything |
 | `--weight-regular` / `--weight-strong` | 400 / 600 | body / headings and emphasis |
 | `--text-xs` / `--text-sm` / `--text-base` | 12 / 13 / 15 px | pane bars and status lines / comments and output / body (homepage) |
 | `--radius` | 4px | every corner |
@@ -215,7 +221,7 @@ name. It must be monospace.
 
 Use this to audit a page, a deck or a diagram against the system:
 
-- [ ] Only IBM Plex Mono; only weights 400 and 600.
+- [ ] Only JetBrains Mono; only weights 400 and 600; ligatures off.
 - [ ] No raw colours, font names or sizes; every value is a token.
 - [ ] Colour appears only with its meaning (prompt, open, warn, fail, data).
 - [ ] Panes have a hairline border and the one radius; no shadows, no fills

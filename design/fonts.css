@@ -1,5 +1,6 @@
-/* The system's one typeface, self-hosted. Regular, italic and strong only;
-   see `font` in design/tokens.ts. */
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/400-italic.css';
-@import '@fontsource/ibm-plex-mono/600.css';
+/* The system's one typeface, self-hosted: JetBrains Mono as a variable font
+   (one file covers every weight; the system uses 400 and 600) plus its
+   italic. See `font` in design/tokens.ts. Ligatures are turned off where the
+   font is used, so code reads character by character. */
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght-italic.css';

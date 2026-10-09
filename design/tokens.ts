@@ -58,10 +58,11 @@ export const color: { light: Palette; dark: Palette } = {
 };
 
 export const font = {
-  /** The one typeface. Loaded from @fontsource in design/fonts.css. */
-  family: 'IBM Plex Mono',
+  /** The one typeface. Loaded from @fontsource in design/fonts.css. The
+   *  "Variable" suffix is the family name fontsource registers. */
+  family: 'JetBrains Mono Variable',
   /** Full stack, with system monospace fallbacks. */
-  stack: "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+  stack: "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
   /** Only two weights exist in this system. */
   weight: { regular: 400, strong: 600 },
 };

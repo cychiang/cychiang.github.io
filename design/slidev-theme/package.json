@@ -12,9 +12,9 @@
     "colorSchema": "both",
     "defaults": {
       "fonts": {
-        "sans": "IBM Plex Mono",
-        "serif": "IBM Plex Mono",
-        "mono": "IBM Plex Mono",
+        "sans": "JetBrains Mono Variable",
+        "serif": "JetBrains Mono Variable",
+        "mono": "JetBrains Mono Variable",
         "provider": "none"
       },
       "favicon": "favicon.svg",

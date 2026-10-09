@@ -11,7 +11,7 @@
   --color-prompt: #1f7a3a;
   --color-flag: #8a6100;
   --color-danger: #b3261e;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --weight-regular: 400;
   --weight-strong: 600;
   --text-xs: 0.75rem;

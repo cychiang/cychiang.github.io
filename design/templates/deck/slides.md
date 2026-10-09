@@ -19,7 +19,7 @@ Every layout and component, as a reference
 
 # A default slide
 
-Body text is IBM Plex Mono at a size that fits about seventy characters on a
+Body text is JetBrains Mono at a size that fits about seventy characters on a
 line. **Strong** is the only emphasis; *italic* is for titles of things.
 
 - Lists are plain text with a dash
