@@ -12,23 +12,28 @@
     "dev": "astro dev",
     "deck": "node scripts/deck.ts",
     "new:deck": "node scripts/new-deck.ts",
-    "check": "node scripts/check-decks.ts && astro check",
+    "check": "pnpm run design:check && node scripts/check-decks.ts && astro check && pnpm run design:specimen",
     "build": "pnpm run build:site && pnpm run build:decks",
     "build:site": "astro build",
     "build:decks": "node scripts/build-decks.ts",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "design:build": "node scripts/design-build.ts",
+    "design:check": "node scripts/design-build.ts --check",
+    "design:preview": "slidev design/templates/deck/slides.md",
+    "design:specimen": "slidev build design/templates/deck/slides.md --out ../../../.specimen"
   },
   "slidev": {
     "addons": [
-      "@/../../slidev-addon-site"
+      "site"
     ]
   },
   "dependencies": {
-    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@slidev/cli": "^53.0.0",
     "@slidev/parser": "^53.0.0",
-    "@slidev/theme-default": "^0.25.0",
     "astro": "^7.3.0",
+    "slidev-addon-site": "workspace:*",
+    "slidev-theme-terminal": "workspace:*",
     "vue": "^3.5.43",
     "yaml": "^2.9.1"
   },

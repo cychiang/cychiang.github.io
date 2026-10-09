@@ -63,7 +63,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     justify-content: space-between;
     gap: 0.25rem 2rem;
     padding-block: 1.125rem;
-    border-bottom: 1px solid var(--color-line);
+    border-bottom: var(--border) solid var(--color-line);
   }
 
   .site-name {
@@ -86,8 +86,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   .site-footer {
     margin-top: 4rem;
     padding-block: 1.125rem 1.5rem;
-    border-top: 1px solid var(--color-line);
+    border-top: var(--border) solid var(--color-line);
     color: var(--color-ink-soft);
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
   }
 </style>

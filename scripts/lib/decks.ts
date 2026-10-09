@@ -48,6 +48,7 @@ export interface Deck {
   /** Slide count. */
   slides: number;
   routerMode?: string;
+  theme?: string;
 }
 
 const HEADMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
@@ -100,6 +101,7 @@ export async function readDeck(slug: string): Promise<Deck> {
     ),
     slides: await countSlides(entry),
     routerMode: head.routerMode,
+    theme: head.theme === undefined ? undefined : String(head.theme),
   };
 }
 
@@ -133,6 +135,9 @@ export function validateDeck(deck: Deck): string[] {
   }
   if (!(DECK_TYPES as readonly string[]).includes(deck.type)) {
     problems.push(`\`card.type\` must be one of: ${DECK_TYPES.join(', ')}`);
+  }
+  if (deck.theme !== 'terminal') {
+    problems.push('`theme: terminal` is required so every deck follows the design system');
   }
   if (deck.routerMode !== 'hash') {
     problems.push('`routerMode: hash` is required (GitHub Pages cannot rewrite deep links)');

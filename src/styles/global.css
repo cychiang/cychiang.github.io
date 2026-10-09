@@ -1,4 +1,13 @@
-@import './theme.css';
+/* Colours, type and shape come from the design system (design/tokens.ts).
+   What is defined here is layout that only the homepage has. */
+@import '../../design/fonts.css';
+@import '../../design/generated/tokens.site.css';
+
+:root {
+  --wall-gap: clamp(1.25rem, 3vw, 2rem);
+  --page-gutter: clamp(1.25rem, 5vw, 4rem);
+  --page-width: 78rem;
+}
 
 *,
 *::before,
@@ -16,11 +25,11 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--color-table);
+  background: var(--color-bg);
   color: var(--color-ink);
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-weight: var(--weight-regular);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.65;
   font-variant-ligatures: none;
 }

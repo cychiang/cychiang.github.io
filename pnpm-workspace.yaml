@@ -1,4 +1,10 @@
-# pnpm settings for this repository (a single package, not a monorepo).
+# pnpm settings for this repository.
+
+# The site is the root package. The two local Slidev packages are workspace
+# members so decks can refer to them by name (`theme: terminal`, addon `site`).
+packages:
+  - design/slidev-theme
+  - slidev-addon-site
 
 overrides:
   # magic-string 1.4.3 breaks every Slidev build through UnoCSS

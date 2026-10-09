@@ -1,5 +1,5 @@
 ---
-theme: default
+theme: terminal
 title: Hello, world
 info: |
   A placeholder deck that proves the pipeline works: written in Markdown,

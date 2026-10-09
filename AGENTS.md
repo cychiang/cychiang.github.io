@@ -20,18 +20,23 @@ that are built separately and published together:
 ```
 decks/<slug>/slides.md     one Slidev deck per folder (the content)
 decks/<slug>/cover.png     optional cover image for the homepage card
+design/                    the design system: tokens, slide theme, templates
+design/README.md           the design rules; read before any visual change
+design/tokens.ts           every colour, typeface and shape; the only source
+design/slidev-theme/       slidev-theme-terminal, used by every deck
+design/templates/          specimen deck and diagram templates (not published)
 src/site.config.ts         site name, homepage copy, header links, type labels
 src/content.config.ts      the `decks` content collection (reads decks/)
 src/pages/                 Astro pages (index, 404)
 src/components/            DeckWall, DeckCard, Terminal (live prompt) and Prompt
 src/layouts/Base.astro     html shell, header, footer
-src/styles/                global.css, and theme.css which selects the theme
-src/themes/                site themes, one CSS file each
+src/styles/global.css      imports the design tokens; homepage layout values
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
 scripts/                   new-deck, deck (dev server), check-decks, build-decks
+scripts/design-build.ts    generates token files from design/tokens.ts
 scripts/templates/         the template a new deck starts from
 slidev-addon-site/         local Slidev addon applied to every deck (link home)
-pnpm-workspace.yaml        pnpm settings: overrides and allowed install scripts
+pnpm-workspace.yaml        pnpm settings, workspace packages, overrides
 .github/workflows/         build on pull requests, deploy on push to main
 ```
 
@@ -51,9 +56,14 @@ pnpm-workspace.yaml        pnpm settings: overrides and allowed install scripts
 
 Managed by other tools. Do not edit by hand:
 
-- `.agents/`, `.claude/`, `.cortex/`, `skills-lock.json`: agent skills
-  installed with the `skills` CLI. Update them with that CLI only.
+- `skills-lock.json` and `.agents/skills/slidev/`: a skill installed with
+  the `skills` CLI; update it with that CLI only. The repository's own
+  skills (`terminal-design`, `deck-authoring`) live next to it and are
+  edited by hand; `.claude/skills/` and `.cortex/skills/` are symlinks to
+  `.agents/skills/`, so a new skill needs a symlink in each.
 - `pnpm-lock.yaml`: change it through `pnpm install` / `pnpm add`.
+- `design/generated/` and `public/favicon.svg`: written by `pnpm design:build`
+  from `design/tokens.ts`. Edit the tokens, then regenerate.
 
 The branch `legacy-main` holds the site that lived here until 2013. Leave it
 alone.
@@ -66,9 +76,12 @@ alone.
 | `pnpm dev` | Homepage dev server (http://localhost:4321). Drafts are shown. |
 | `pnpm deck <slug>` | Slidev dev server for one deck (http://localhost:3030). |
 | `pnpm new:deck <slug> "Title"` | Create a deck from the template, as a draft. |
-| `pnpm check` | Validate every deck, then type-check the site and scripts. |
+| `pnpm check` | Design tokens, every deck, types, and the specimen deck. Must pass before a commit. |
 | `pnpm build` | Build the homepage, then every published deck, into `dist/`. |
 | `pnpm preview` | Serve `dist/` exactly as it will be published. |
+| `pnpm design:build` | Regenerate token files after editing `design/tokens.ts`. |
+| `pnpm design:check` | Fail if generated files are stale or contrast is too low. |
+| `pnpm design:preview` | The specimen deck: every layout and diagram template. |
 
 Deck links on the homepage only work after `pnpm build`, because decks are
 built by Slidev, not by the Astro dev server. To review the whole site, run
@@ -76,6 +89,11 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
 
 ## Skills and docs to use
 
+- **`deck-authoring`** (`.agents/skills/deck-authoring/SKILL.md`): the
+  working order for creating or editing a deck. Use it for any slides.
+- **`terminal-design`** (`.agents/skills/terminal-design/SKILL.md`): the
+  procedure for any visual change or style audit. Use it before touching
+  colours, type, components, layouts or diagram styling.
 - **Slidev**: read `.agents/skills/slidev/SKILL.md` before writing or editing
   slides, and the matching file in `.agents/skills/slidev/references/` for the
   feature in question (layouts, animations, code blocks, diagrams, export).
@@ -85,6 +103,33 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
   moving and removing slides. See `references/tool-mcp.md`.
 - **Astro**: the Astro docs MCP server is configured in `.mcp.json`
   (`astro-docs`). Check it before using an Astro API. This repo is on Astro 7.
+
+## The design system
+
+Everything visible follows the terminal design system in `design/README.md`.
+That file is normative; this section is the summary an agent needs most
+often.
+
+- **One source of values.** Colours, the typeface, weights and radius live in
+  `design/tokens.ts`. Nothing else may contain a raw colour, font name or
+  pixel border: components, the slide theme and diagrams read the generated
+  custom properties (`--color-*`, `--font-mono`, `--text-*`, `--radius`,
+  `--border`).
+- **Colour is meaning.** `--color-prompt` for the prompt, cursor and healthy
+  states; `--color-accent` for anything that opens or is in focus;
+  `--color-flag` for warnings and drafts; `--color-danger` for failure.
+  Nothing is coloured for decoration.
+- **Structure is a pane.** Hairline border, the one radius, optional title
+  bar and status line. No shadows, no gradients, no second radius.
+- **Every deck uses `theme: terminal`** and the layouts, components and
+  colour classes the theme provides. `pnpm check` refuses other themes.
+- **Every diagram starts from a template** in `design/templates/diagrams/`
+  and uses only the semantic classes listed there.
+- **Changing the style** follows "Changing the style" in `design/README.md`:
+  tokens → `pnpm design:build` → review the homepage, the specimen deck and a
+  real deck in both modes → search for escaped raw values → update the docs →
+  commit everything together. A style change that leaves any surface behind
+  is not finished.
 
 ## Adding a deck
 
@@ -109,11 +154,13 @@ describes it for the homepage.
 
 ```yaml
 ---
-theme: default            # Slidev theme (see "Slidev themes")
+theme: terminal           # always; the design system's theme
 title: Building a provider from scratch
 info: |
   One or two plain sentences. Shown under the card on the homepage.
 routerMode: hash          # required, see "Deck rules"
+themeConfig:              # optional: the prompt line (user@host:path$)
+  prompt: { user: cychiang, host: kubecon, path: "~" }
 card:
   date: 2026-09-12        # when it was given or written, YYYY-MM-DD
   type: talk              # talk | case-study | note | open-source
@@ -136,6 +183,7 @@ only by this site.
 
 - The folder name matches `<year>-<short-title>`, and the year equals the year
   of `card.date`.
+- `theme: terminal` is set.
 - `title` is set.
 - `card.date` is a valid `YYYY-MM-DD` date.
 - `card.type` is one of the allowed types.
@@ -158,6 +206,28 @@ Check where Slidev wrote the PNG, move it to `decks/<slug>/cover.png`, and
 commit only that file; revert the `playwright-chromium` dependency afterwards.
 These steps have not been run in this repository yet. If they need adjusting,
 correct this section in the same commit.
+
+### Writing slides
+
+- Layouts: `cover` (first slide), `default`, `section`, `diagram`, `end`,
+  plus `center`, `two-cols`, `two-cols-header`, `statement`, `fact`, `quote`.
+  See them all with `pnpm design:preview`.
+- Components: `<Prompt>command</Prompt>` for a command that was run,
+  `<Pane title="…">…</Pane>` for its output or any boxed content.
+- The prompt line (`user@host:path$`) on the cover and in `<Prompt>`
+  defaults to `cychiang@github.io:~$`. Change it for a deck with
+  `themeConfig.prompt` in the headmatter, for one cover slide with
+  `prompt:` in that slide's frontmatter (`prompt: "cmd"` sets only the
+  command, `prompt: false` hides the line), or for one `<Prompt>` with its
+  `user`, `host` and `path` attributes. The cover's default command is
+  `open <slug>`.
+- Colour classes: `.ok`, `.warn`, `.fail`, `.soft` on a `<span>`. No inline
+  styles, no UnoCSS colour utilities.
+- One idea per slide; a one-line heading; at most eight lines of body or
+  twelve of code. Split rather than shrink.
+- Diagrams: copy the Mermaid block from the matching file in
+  `design/templates/diagrams/` into a slide with `layout: diagram` and follow
+  the rules in that file's note (direction, node count, classes).
 
 ### Content rules
 
@@ -186,89 +256,60 @@ correct this section in the same commit.
 
 ### Site style
 
-The site has a terminal look, and new pages and components must keep it:
+The homepage is the design system applied to one page; `design/README.md`
+has the vocabulary. Rules specific to the homepage:
 
-- One monospace typeface for everything (IBM Plex Mono). No second family.
 - Each section starts with a prompt line, `<Prompt command="…" />`, naming
-  the command whose "output" follows (`cat about.txt`, `ls decks/`). The
-  prompt is decoration and is hidden from screen readers, so every section
-  also needs a real heading (it may be `visually-hidden`) or an `aria-label`.
-  The command should be a plausible one for the content; do not invent flags
-  for jokes.
-- The prompt above the deck wall is live (`Terminal.astro`): visitors can
-  type `help`, `ls [--type <kind>]`, `cat <name>`, `open <deck>` (or `cd`),
-  `whoami` and `clear`, with Tab completion and Up/Down history. Rules for
-  changing it:
-  - Everything a command does must also be possible with mouse or touch
-    elsewhere on the page. The terminal is a second way in, never the only one.
-  - Keep commands few and shaped like real shell commands. Add one only when
-    it does something useful on this site, and list it in `help`.
-  - It must not take focus on page load, and the page must still read
-    correctly without JavaScript (the static `ls decks/` line is the fallback).
-  - Deck names and kinds come from the `decks` collection; never hard-code
-    them in the script.
+  the command whose "output" follows. The prompt is decoration and is hidden
+  from screen readers, so every section also needs a real heading (it may be
+  `visually-hidden`) or an `aria-label`. Commands must be plausible.
+- The prompt above the deck wall is live (`Terminal.astro`): `help`,
+  `ls [--type <kind>]`, `cat <name>`, `open <deck>` (or `cd`), `whoami`,
+  `clear`, with Tab completion and Up/Down history. Everything a command does
+  must also be possible with mouse or touch elsewhere on the page. Keep
+  commands few and real-looking; list new ones in `help`. It must not take
+  focus on load, and the page must still read correctly without JavaScript.
+  Deck names and kinds come from the `decks` collection, never hard-coded.
 - Decks are panes: path in the title bar, slide in the body, date and length
-  in the status line. Borders are 1px; corners use `--radius-slide`.
-- Colour carries the meaning it has in a terminal: `--color-prompt` (green)
-  for the prompt and cursor, `--color-accent` (blue) for anything that can be
-  opened, `--color-flag` (yellow) for warnings such as drafts. Do not use
-  colour as decoration.
-- Lowercase for interface labels that mimic commands, paths and flags
-  (`github`, `--type all`). Sentence case for prose and headings.
-- The blinking cursor in the first empty slot is the only animation. Do not
-  add more, and respect `prefers-reduced-motion`.
+  in the status line.
+- Lowercase for labels that mimic commands, paths and flags (`github`,
+  `--type all`); sentence case for prose and headings.
+- The blinking cursor in the first empty slot is the only animation.
 
-### Changing the site theme
-
-A site theme is one CSS file in `src/themes/` that defines the custom
-properties below for light and dark. Components use these properties and no
-other colours, fonts or radii.
-
-```
---color-table  --color-slide  --color-ink     --color-ink-soft
---color-line   --color-accent --color-on-accent
---color-prompt --color-flag
---font-display --font-body    --weight-regular --weight-strong
---radius-slide --wall-gap     --page-gutter    --page-width
-```
-
-To change colours or the typeface, edit `src/themes/terminal.css`, or copy it
-to a new file and point the import in `src/styles/theme.css` at it. A
-different typeface needs its `@fontsource` package installed and imported at
-the top of the theme file; keep it monospace. Never put raw colour or font
-values in components; add a property to the theme contract instead, and
-update this list.
+Layout values that only the homepage has (`--page-width`, `--wall-gap`,
+`--page-gutter`) live in `src/styles/global.css`. Everything else is a token.
 
 ### What every deck gets automatically
 
-`slidev-addon-site/` is a local Slidev addon. The root `package.json` lists it
-under `slidev.addons`, so Slidev loads it for every deck with nothing to add
-to a deck's headmatter. It provides the way back to the homepage:
+`slidev-theme-terminal` (in `design/slidev-theme/`) and the local addon
+`slidev-addon-site` are workspace packages, so Slidev finds them by name:
+`theme: terminal` in a deck's headmatter, and `addons: [site]` in the root
+`package.json` for every deck. The theme provides the look, the layouts, the
+code colours, the diagram styling and the status line; the addon provides
+the way back to the homepage (an "All decks" link top-right on every slide
+and a home button in Slidev's control bar, hidden in presenter view, exports
+and embeds). A deck must always offer a way back; do not remove it.
 
-- `global-top.vue`: an "All decks" link in the top-left corner of every slide.
-  It is hidden in presenter view, in exports and when a deck is embedded.
-- `custom-nav-controls.vue`: a home button in Slidev's control bar.
-- `site-home.ts`: works out the homepage URL from the deck's base path.
-
-A deck must always offer a way back to the homepage; do not remove these
-without replacing them. Put anything else that should appear on every deck
-(a footer, a logo) in this addon, not in individual decks. A deck can still
-add its own `global-top.vue`; Slidev renders both.
+Anything that should appear on every deck (a footer, a logo) goes in the
+theme, not in individual decks.
 
 ### Slidev themes
 
-Each deck chooses its own Slidev theme with `theme:` in its headmatter. Theme
-packages are installed once at the repository root, for example
-`pnpm add @slidev/theme-seriph`. A theme that is not installed makes the CI
-build fail, so install it in the same commit that first uses it.
+There is one: `terminal`. Do not install or reference another theme; the
+whole point of the design system is that every deck looks the same. If a deck
+needs something the theme lacks, add it to the theme (and to the specimen
+deck and `design/README.md`) so every deck gets it.
 
 ## Adding other kinds of content
 
 Articles are not set up yet. When they are needed, keep the same shape as
 decks: Markdown in a top-level `posts/` folder, a `posts` collection in
 `src/content.config.ts` using Astro's `glob()` loader, and pages under
-`src/pages/posts/`. Add the build output to the same `dist/`, and extend this
-file with the rules for writing one.
+`src/pages/posts/`. They use the same tokens and patterns (prompt lines,
+panes, the type scale in `design/README.md`), and diagrams in articles use
+`design/mermaid.ts` for their configuration. Add the build output to the same
+`dist/`, and extend this file and `design/README.md` with the rules for
+writing one.
 
 ## Build and deployment
 
@@ -306,11 +347,15 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 ## Before you finish
 
 - `pnpm check` and `pnpm build` both pass.
-- For visual changes, look at the result with `pnpm preview` in light and
-  dark, at phone and desktop widths.
+- For visual changes, look at the result in light and dark: the homepage
+  with `pnpm preview` at phone and desktop widths, decks and diagrams with
+  `pnpm design:preview`. Run through the review checklist in
+  `design/README.md`.
+- No raw colours, font names or pixel borders were added outside
+  `design/tokens.ts`.
 - Navigation works both ways: from the homepage into a deck, and from any
   slide back to the homepage.
 - No files changed under `.agents/`, `.claude/`, `.cortex/`, or in
   `skills-lock.json`, unless the task was to update skills.
-- This file still describes the repository. If you changed a convention,
-  update it in the same commit.
+- This file and `design/README.md` still describe the repository. If you
+  changed a convention or the style, update them in the same commit.

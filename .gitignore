@@ -4,6 +4,7 @@ decks/*/dist/
 
 # generated
 .astro/
+.specimen/
 .slidev/
 components.d.ts
 

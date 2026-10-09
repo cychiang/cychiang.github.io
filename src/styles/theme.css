@@ -1,3 +1,0 @@
-/* The active site theme. Point this import at another file in src/themes/ to
-   change the look of the whole site. */
-@import '../themes/terminal.css';

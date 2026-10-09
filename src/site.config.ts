@@ -1,6 +1,8 @@
 // Everything about the site that is not a deck: who it belongs to, the words on
 // the homepage, and the links in the header. Change copy here, not in components.
 
+import { prompt } from '../design/tokens.ts';
+
 export const site = {
   /** Shown in the header and the browser tab. */
   name: 'Chuan-Yen Chiang',
@@ -12,7 +14,7 @@ export const site = {
   /** Used for <meta name="description"> and link previews. */
   description: 'Slide decks and notes on platform engineering by Chuan-Yen Chiang.',
   /** The shell prompt shown before each section: user@host:~$ */
-  prompt: { user: 'cychiang', host: 'github.io' },
+  prompt,
   links: [
     { label: 'github', href: 'https://github.com/cychiang' },
     { label: 'linkedin', href: 'https://www.linkedin.com/in/chuan-yen' },
