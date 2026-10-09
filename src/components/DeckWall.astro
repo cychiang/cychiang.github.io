@@ -77,11 +77,6 @@ const emptySlots = Math.max(0, 3 - decks.length);
   for (const button of buttons) {
     button.addEventListener('click', () => applyFilter(button.dataset.filter ?? 'all'));
   }
-
-  // The terminal's `ls --type …` filters the same wall.
-  document.addEventListener('decks:filter', (event) => {
-    applyFilter((event as CustomEvent<{ type: string }>).detail.type);
-  });
 </script>
 
 <style>

@@ -93,9 +93,8 @@ distances in multiples of the line height.
 ## Patterns
 
 **Prompt line.** `user@host:path$ command`. On the homepage it opens a
-section (`Prompt.astro`) or takes input (`Terminal.astro`); on slides it
-shows a command that was run (`<Prompt>`), and the cover's first line is
-`open <deck>`. Host and path are coloured, the command is plain ink.
+section (`Prompt.astro`); on slides it shows a command that was run
+(`<Prompt>`), and the cover's first line is `open <deck>`. Host and path are coloured, the command is plain ink.
 
 The parts come from three layers, most specific first: a slide's
 frontmatter (`prompt: { user, host, path, command }`, `prompt: "command"`
