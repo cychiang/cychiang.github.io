@@ -76,6 +76,11 @@ const jsonLd = {
         const figure = document.createElement('figure');
         figure.className = 'diagram';
         figure.innerHTML = svg;
+        // Natural size: the viewBox is the size Mermaid laid the diagram out
+        // at, so text inside it stays at the configured 15px.
+        const drawing = figure.querySelector('svg');
+        const width = drawing?.viewBox.baseVal.width;
+        if (drawing && width) drawing.style.setProperty('width', `${Math.ceil(width)}px`, 'important');
         pre.replaceWith(figure);
       } catch (error) {
         console.warn('Mermaid could not render a diagram', error);

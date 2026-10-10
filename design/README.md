@@ -79,7 +79,7 @@ the table.
 | --- | --- | --- |
 | `--font-mono` | JetBrains Mono (variable), system monospace fallbacks | everything |
 | `--weight-regular` / `--weight-strong` | 400 / 600 | body / headings and emphasis |
-| `--text-xs` / `--text-sm` / `--text-base` | 12 / 13 / 15 px | pane bars and status lines / comments and output / body (homepage) |
+| `--text-xs` / `--text-sm` / `--text-base` | 12 / 13 / 15→16 px | pane bars and status lines / comments and output / body (15px on a phone, 16px from a tablet up) |
 | `--radius` | 4px | every corner |
 | `--border` | 1px | every border and diagram line |
 
@@ -108,7 +108,9 @@ session.
 **Pane.** A surface with a hairline border, `--radius` corners, an optional
 title bar (path or name, soft, `--text-xs`) and an optional status line. A
 deck on the homepage is a pane; a code block is a pane; `<Pane>` on a slide
-is a pane; a diagram node is a small pane.
+is a pane; a diagram node is a small pane. Inline code is not: a tint of
+`--color-surface` with a faint inset edge, so a paragraph that names five
+things does not turn into five boxes.
 
 **Status line.** Full-width, soft text, hairline rule above: on every slide
 (title left, `n/total` right) and at the bottom of a deck card (date left,
@@ -150,13 +152,21 @@ The homepage and posts are responsive without a separate mobile design:
 sizes are fluid (`clamp()` for headings and padding, `ch` for horizontal
 spacing), the deck wall is a grid that fills as many 19rem columns as fit,
 and the post column is centred at 76 characters wide on a large screen and
-full width on a phone. Three things change below 36rem: the prompt loses its
-`user@host` part (the `$` alone still reads as a prompt), only one empty
-slot is shown on the wall, and anything wider than the column scrolls
+full width on a phone. Body text is 15px on a phone and 16px from a tablet
+up (`--text-base` is a `clamp()`), and the column is set in `ch`, so it
+grows with the type. Below 36rem the prompt loses its `user@host` part (the
+`$` alone still reads as a prompt); the wall shows its second empty slot
+only when three columns fit. Anything wider than the column scrolls
 sideways inside its own pane rather than widening the page: code blocks,
-tables, and diagrams, which keep a readable minimum width instead of
-shrinking to a thumbnail. Decks are Slidev's responsibility; they scale the
-16:9 canvas to the screen.
+tables, and diagrams, which render at their natural size (labels at 15px)
+instead of shrinking to a thumbnail. A diagram in a post is therefore drawn
+top to bottom (`flowchart TD`) so it fits the column; left to right is for
+slides.
+
+Decks are Slidev's responsibility; they scale the 16:9 canvas to the
+screen. Held upright, a phone shows a slide at less than half size, so the
+addon prints `# rotate your phone for a larger slide` above it; the "All
+decks" link is interface, not content, and keeps its size at every scale.
 
 Check every change at 390px, 768px and 1920px in both modes; the page must
 never scroll horizontally.
@@ -226,7 +236,8 @@ Templates, one per kind, in `templates/diagrams/`. Each is a complete slide
 | `sequence.md` | who talks to whom, in what order |
 | `state.md` | the lifecycle of one thing |
 
-Shared rules: left to right on slides; about eight nodes or eight messages
+Shared rules: left to right on slides, top to bottom in posts (the
+reading column is 76 characters wide); about eight nodes or eight messages
 per picture; label one edge of a fan-out, not every edge; edge labels of two
 words; split rather than shrink. Shapes carry structure (`[process]`,
 `{decision}`, `([start or end])`, `[(data)]`, `[[queue]]`); do not add
@@ -281,8 +292,8 @@ Use this to audit a page, a deck or a diagram against the system:
 - [ ] Commands and paths are plausible; labels in lowercase, prose in
       sentence case.
 - [ ] Slides: one idea, ≤ 8 body lines, ≤ 12 code lines, status line visible.
-- [ ] Diagrams: ≤ 8 nodes or messages, left to right, classes only for
-      meaning, one label per fan-out.
+- [ ] Diagrams: ≤ 8 nodes or messages, left to right on slides and top to
+      bottom in posts, classes only for meaning, one label per fan-out.
 
 ## Files
 

@@ -71,7 +71,9 @@ export const font = {
 export const text = {
   xs: '0.75rem', // pane bars, status lines
   sm: '0.8125rem', // comments, notes, output
-  base: '0.9375rem', // body
+  // Body: 15px on a phone, 16px from a tablet up. The reading column is set
+  // in ch, so it grows with the type and stays under 80 characters.
+  base: 'clamp(0.9375rem, 0.875rem + 0.3vw, 1rem)',
 };
 
 export const shape = {
