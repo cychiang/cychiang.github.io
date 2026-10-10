@@ -30,7 +30,9 @@ written by `pnpm design:build`.
    change; do not patch a component with a raw value.
 2. `pnpm design:build` if tokens changed, then `pnpm design:check`.
 3. Look at every surface in light and dark:
-   - homepage: `pnpm build && pnpm preview`, phone and desktop widths
+   - homepage and a post: `pnpm build && pnpm preview` at 390px, 768px and
+     1920px; no horizontal page scroll; the post column centred on wide
+     screens
    - every slide layout and diagram template: `pnpm design:preview`
      (the specimen deck, `design/templates/deck/slides.md`)
    - a real deck: `pnpm deck 2026-hello-world`
