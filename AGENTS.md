@@ -402,11 +402,14 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 
 - `pnpm build` runs `astro build` (homepage into `dist/`) and then
   `scripts/build-decks.ts` (each published deck into `dist/decks/<slug>/`).
-- The workflow passes `SITE_URL` and `BASE_PATH` from
-  `actions/configure-pages`, so the site works at a domain root or under a
-  sub-path. `SITE_URL` is also what canonical URLs, the sitemap, the feed
-  and preview images use; a local `pnpm build` uses http://localhost:4321. Always build internal links from `import.meta.env.BASE_URL` in
-  Astro and from `withBase()` in scripts. Never hard-code a leading `/`.
+- The workflow sets `SITE_URL` to `https://cychiang.github.io` (fixed, always
+  https) and `BASE_PATH` to `/`. `SITE_URL` is what canonical URLs, the
+  sitemap, robots.txt, the feed and preview images use, so every public URL
+  is https; a local `pnpm build` uses http://localhost:4321. Do not derive it
+  from `actions/configure-pages`, which reports `http://`. Always build
+  internal links from `import.meta.env.BASE_URL` in Astro and from
+  `withBase()` in scripts. Never hard-code a leading `/`.
+- In the repository's Pages settings, "Enforce HTTPS" stays on.
 - The repository's Pages source must be set to "GitHub Actions".
 - After a deploy, a browser can keep showing the previous build for up to ten
   minutes, and a deck that was already open can fail to load further slides.

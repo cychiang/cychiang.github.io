@@ -11,10 +11,9 @@ const deckPages = (await listDecks())
   .filter((deck) => !deck.draft)
   .map((deck) => new URL(`${base.replace(/\/+$/, '')}/decks/${deck.slug}/`, siteUrl).href);
 
-// SITE_URL and BASE_PATH are provided by the deploy workflow (from
-// actions/configure-pages), so the same source works whether GitHub serves the
-// site at the domain root or under a /<repo>/ sub-path. Locally both default
-// to the root.
+// SITE_URL and BASE_PATH are set by the deploy workflow (SITE_URL is fixed to
+// https://cychiang.github.io). Locally they default to http://localhost:4321
+// and the root.
 export default defineConfig({
   site: siteUrl,
   base,
