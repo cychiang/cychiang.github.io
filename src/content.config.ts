@@ -1,4 +1,5 @@
 import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { DECK_TYPES, listDecks } from '../scripts/lib/decks.ts';
 
@@ -31,4 +32,18 @@ const decks = defineCollection({
   }),
 });
 
-export const collections = { decks };
+// Posts are plain Markdown files in posts/, one per note. The file name is the
+// slug and the URL; the frontmatter is the card. scripts/check-posts.ts
+// enforces the naming and date rules before a build.
+const posts = defineCollection({
+  loader: glob({ pattern: '*.md', base: './posts' }),
+  schema: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { decks, posts };

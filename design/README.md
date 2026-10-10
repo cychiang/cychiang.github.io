@@ -131,6 +131,19 @@ the generated tokens and adds only layout values (`--page-width`,
 `--wall-gap`). Components use tokens and nothing else. The rules in
 `AGENTS.md`, "Site style", cover what each component may do.
 
+## Posts
+
+A post is the homepage's typography applied to a column of Markdown
+(`src/pages/posts/[slug].astro`, styles under `.prose` in
+`src/styles/global.css`). It opens with the prompt line
+`cat posts/<slug>.md`, then the title, a soft meta line (date, `#tags`),
+the body at 76 characters per line, and closes with `cd ~` and a link
+home. Headings are strong with a rule under `h2`; lists, quotes, tables and
+code blocks look exactly as they do on slides; code is coloured by the same
+Shiki themes (`design/shiki.ts`); fenced `mermaid` blocks render in the
+browser with `design/mermaid.ts`. On the homepage, posts are a listing
+under `ls posts/`: date, title, description as a comment, tags.
+
 ## Slides
 
 Every deck declares `theme: terminal` (`pnpm check` refuses anything else).
@@ -147,7 +160,7 @@ The theme lives in `slidev-theme/`:
   `themeConfig.prompt` in the headmatter for the whole deck; see Patterns.
 - **Colour classes**: `.ok`, `.warn`, `.fail`, `.soft`. There are no others.
 - **Code**: Shiki with `terminal-light` / `terminal-dark` themes built from
-  the tokens. Strings are prompt-green, keywords accent-blue, numbers
+  the tokens (`design/shiki.ts`, shared with posts). Strings are prompt-green, keywords accent-blue, numbers
   flag-yellow, comments soft. Line highlighting dims the other lines.
 - **Status line** on every slide except the cover.
 
@@ -158,7 +171,7 @@ both. `pnpm design:preview` shows the specimen deck with every layout.
 
 ## Diagrams
 
-Diagrams are Mermaid, rendered inside decks with the configuration in
+Diagrams are Mermaid, rendered inside decks and posts with the configuration in
 `mermaid.ts`: tokens as CSS custom properties, so a diagram follows light
 and dark and any later token change without being touched. Nodes are panes,
 edges are hairlines with small rounded corners, labels sit on the background.
@@ -253,6 +266,7 @@ design/
   tokens.ts                the source of every value
   fonts.css                the typeface, self-hosted
   mermaid.ts               diagram configuration built from the tokens
+  shiki.ts                 code colours built from the tokens (slides and posts)
   generated/               written by `pnpm design:build`; committed
   slidev-theme/            slidev-theme-terminal: layouts, styles, components,
                            setup/shiki.ts, setup/mermaid.ts, global-top.vue

@@ -11,28 +11,36 @@ that are built separately and published together:
 
 - **Decks**: each one is a [Slidev](https://sli.dev) presentation in
   `decks/<slug>/slides.md`, published at `/decks/<slug>/`.
+- **Posts**: Markdown notes in `posts/<slug>.md`, published at
+  `/posts/<slug>/`, usually written in OpenKnowledge (see "Writing with
+  OpenKnowledge").
 - **Homepage**: an [Astro](https://astro.build) site in `src/` that shows every
-  published deck as a card on a wall. Cards are generated from each deck's
-  headmatter. Nothing about a deck is written twice.
+  published deck as a card on a wall and lists every published post. Cards
+  and rows are generated from each file's frontmatter. Nothing is written
+  twice.
 
 ## Layout
 
 ```
 decks/<slug>/slides.md     one Slidev deck per folder (the content)
 decks/<slug>/cover.png     optional cover image for the homepage card
+posts/<slug>.md            one post per file (the content)
+.ok/                       OpenKnowledge project: config, templates, schemas
+.okignore                  what OpenKnowledge hides (everything but content)
 design/                    the design system: tokens, slide theme, templates
 design/README.md           the design rules; read before any visual change
 design/tokens.ts           every colour, typeface and shape; the only source
 design/slidev-theme/       slidev-theme-terminal, used by every deck
 design/templates/          specimen deck and diagram templates (not published)
 src/site.config.ts         site name, homepage copy, header links, type labels
-src/content.config.ts      the `decks` content collection (reads decks/)
-src/pages/                 Astro pages (index, 404)
-src/components/            DeckWall, DeckCard, Prompt and PromptPrefix
+src/content.config.ts      the `decks` and `posts` collections
+src/pages/                 Astro pages (index, 404, posts/[slug])
+src/components/            DeckWall, DeckCard, PostList, Prompt, PromptPrefix
 src/layouts/Base.astro     html shell, header, footer
 src/styles/global.css      imports the design tokens; homepage layout values
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
-scripts/                   new-deck, deck (dev server), check-decks, build-decks
+scripts/lib/posts.ts       post discovery and validation
+scripts/                   new-deck, new-post, deck (dev server), check-*, build-decks
 scripts/design-build.ts    generates token files from design/tokens.ts
 scripts/templates/         the template a new deck starts from
 slidev-addon-site/         local Slidev addon applied to every deck (link home)
@@ -76,7 +84,8 @@ alone.
 | `pnpm dev` | Homepage dev server (http://localhost:4321). Drafts are shown. |
 | `pnpm deck <slug>` | Slidev dev server for one deck (http://localhost:3030). |
 | `pnpm new:deck <slug> "Title"` | Create a deck from the template, as a draft. |
-| `pnpm check` | Design tokens, every deck, types, and the specimen deck. Must pass before a commit. |
+| `pnpm new:post <slug> "Title"` | Create a post from the template, as a draft. |
+| `pnpm check` | Design tokens, every deck and post, types, and the specimen deck. Must pass before a commit. |
 | `pnpm build` | Build the homepage, then every published deck, into `dist/`. |
 | `pnpm preview` | Serve `dist/` exactly as it will be published. |
 | `pnpm design:build` | Regenerate token files after editing `design/tokens.ts`. |
@@ -91,6 +100,8 @@ built by Slidev, not by the Astro dev server. To review the whole site, run
 
 - **`deck-authoring`** (`.agents/skills/deck-authoring/SKILL.md`): the
   working order for creating or editing a deck. Use it for any slides.
+- **`post-authoring`** (`.agents/skills/post-authoring/SKILL.md`): the
+  working order for a post, including the OpenKnowledge branch flow.
 - **`terminal-design`** (`.agents/skills/terminal-design/SKILL.md`): the
   procedure for any visual change or style audit. Use it before touching
   colours, type, components, layouts or diagram styling.
@@ -298,16 +309,64 @@ whole point of the design system is that every deck looks the same. If a deck
 needs something the theme lacks, add it to the theme (and to the specimen
 deck and `design/README.md`) so every deck gets it.
 
+## Writing a post
+
+A post is one Markdown file, `posts/<year>-<short-title>.md`. The file name
+is the URL. Create one with `pnpm new:post <slug> "Title"` or from the
+"Post" template in OpenKnowledge.
+
+```yaml
+---
+title: Why reconcile loops
+description: One sentence, shown under the title on the homepage.
+date: 2026-10-10        # YYYY-MM-DD; the year must match the file name
+tags: [crossplane]      # optional
+draft: true             # false to publish
+---
+```
+
+`pnpm check` enforces the file name pattern, the title, the description and
+the date (`scripts/lib/posts.ts`); OpenKnowledge shows the same rules in its
+editor through `.ok/schemas/post.json`. Keep the two in step.
+
+Writing: start with the claim; one idea per section; headings in sentence
+case; code in fenced blocks with a language (coloured with the design
+tokens); diagrams as fenced `mermaid` blocks copied from
+`design/templates/diagrams/`, rendered in the browser with the same
+configuration as slides. Relative links between posts (`./other-post.md`)
+are fine; OpenKnowledge checks them. The content rules for decks apply.
+
+## Writing with OpenKnowledge
+
+[OpenKnowledge](https://openknowledge.ai) is the editor for posts (and can
+edit decks). It opens this repository as its project; `.ok/config.yml`,
+`.okignore`, the templates and the schemas are committed so every clone
+behaves the same. Its machine-local state (`.ok/local/`) is ignored.
+
+The flow:
+
+1. The OpenKnowledge checkout stays on the **`writing`** branch. Its
+   auto-sync commits and pushes there on its own; nothing on `writing` is
+   published.
+2. Every push to `writing` runs `pnpm check` and a build in CI, so a bad
+   frontmatter or a broken link shows up there first.
+3. Publishing is a merge of `writing` into `main` (a pull request, or a
+   local merge and push). Only `main` deploys.
+4. Code changes go the other way: after a change lands on `main`, merge
+   `main` into `writing` so OpenKnowledge keeps syncing without conflicts.
+
+Agents working in the repository should not commit content on `writing`
+while OpenKnowledge has it open elsewhere; make the change on a branch from
+`main` and merge. The `ok` CLI needs Node 24 or newer; the site itself
+builds on Node 22 (`.nvmrc`), and the two do not conflict.
+
 ## Adding other kinds of content
 
-Articles are not set up yet. When they are needed, keep the same shape as
-decks: Markdown in a top-level `posts/` folder, a `posts` collection in
-`src/content.config.ts` using Astro's `glob()` loader, and pages under
-`src/pages/posts/`. They use the same tokens and patterns (prompt lines,
-panes, the type scale in `design/README.md`), and diagrams in articles use
-`design/mermaid.ts` for their configuration. Add the build output to the same
-`dist/`, and extend this file and `design/README.md` with the rules for
-writing one.
+Keep the same shape as decks and posts: files in a top-level folder, a
+collection in `src/content.config.ts`, a `scripts/lib/<kind>.ts` with the
+rules and a `check-<kind>.ts` in `pnpm check`, an OpenKnowledge template and
+schema in `.ok/`, the same tokens and patterns, and a section in this file
+and in `design/README.md`.
 
 ## Build and deployment
 

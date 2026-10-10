@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Post frontmatter",
+  "description": "A post in posts/<year>-short-title.md. Mirrors scripts/lib/posts.ts.",
+  "type": "object",
+  "required": ["title", "description", "date"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1, "description": "One sentence, shown on the homepage." },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "YYYY-MM-DD; the year must match the file name." },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "draft": { "type": "boolean", "description": "true keeps the post off the published site." }
+  }
+}

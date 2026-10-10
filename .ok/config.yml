@@ -1,0 +1,27 @@
+# OpenKnowledge project settings (https://openknowledge.ai/docs/reference/configuration).
+# Committed, so every clone opens the same way. Machine-local settings such
+# as the sync mode live in .ok/local/, which git ignores.
+
+# The whole repository is the project; .okignore hides everything that is not
+# content, so the editor shows only decks/ and posts/.
+content:
+  dir: "."
+  attachmentFolderPath: "./"
+
+# Frontmatter is checked in the editor with the same rules `pnpm check` uses.
+contentRules:
+  frontmatter:
+    enabled: true
+    schemas:
+      - file: .ok/schemas/post.json
+        appliesTo: "posts/**/*.md"
+      - file: .ok/schemas/deck.json
+        appliesTo: "decks/*/slides.md"
+
+validation:
+  links: error
+
+# New machines start in pull-and-push mode on the writing branch; publishing
+# is a merge into main (see AGENTS.md, "Writing with OpenKnowledge").
+autoSync:
+  default: full

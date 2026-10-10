@@ -1,9 +1,10 @@
 # cychiang.github.io
 
-My personal site: a wall of slide decks about platform engineering. Each deck is
-written in Markdown with [Slidev](https://sli.dev); the homepage is built with
-[Astro](https://astro.build). Pushing to `main` publishes everything to GitHub
-Pages.
+My personal site: slide decks and notes about platform engineering. Decks are
+written in Markdown with [Slidev](https://sli.dev), notes are Markdown files
+written in [OpenKnowledge](https://openknowledge.ai), and the homepage is built
+with [Astro](https://astro.build). Pushing to `main` publishes everything to
+GitHub Pages.
 
 ## Quick start
 
@@ -26,6 +27,12 @@ pnpm deck 2026-my-talk
 Write the slides in `decks/2026-my-talk/slides.md`, set `card.draft: false` when
 it is ready, and push. The homepage card is generated from the deck's
 headmatter.
+
+## Write a post
+
+Open the repository in OpenKnowledge on the `writing` branch and create a
+document from the "Post" template, or run `pnpm new:post 2026-my-note "Title"`.
+Set `draft: false` when it is ready and merge `writing` into `main`.
 
 ## Build
 

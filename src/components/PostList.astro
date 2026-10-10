@@ -1,0 +1,108 @@
+---
+// Posts as a listing: one row per post, like `ls -l` with the description
+// as a comment beneath. Newest first.
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+}
+
+const { posts } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+---
+
+{
+  posts.length === 0 ? (
+    <p class="empty">No posts yet.<span class="cursor" aria-hidden="true" /></p>
+  ) : (
+    <ol class="posts">
+      {posts.map((post) => {
+        const iso = post.data.date.toISOString().slice(0, 10);
+        return (
+          <li class="post">
+            <div class="post-line">
+              <time datetime={iso}>{iso}</time>
+              <a href={`${base}/posts/${post.id}/`}>{post.data.title}</a>
+              {post.data.draft && <span class="post-draft">draft</span>}
+            </div>
+            <p class="post-description">{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <p class="post-tags">{post.data.tags.map((tag) => `#${tag}`).join(' ')}</p>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  )
+}
+
+<style>
+  .posts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post {
+    padding: 0.75rem 0;
+    border-top: var(--border) solid var(--color-line);
+  }
+
+  .post:last-child {
+    border-bottom: var(--border) solid var(--color-line);
+  }
+
+  .post-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2ch;
+    align-items: baseline;
+  }
+
+  time {
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .post-line a {
+    font-weight: var(--weight-strong);
+  }
+
+  .post-draft {
+    color: var(--color-flag);
+    font-size: var(--text-sm);
+  }
+
+  .post-description {
+    margin-top: 0.125rem;
+    padding-left: 2ch;
+    text-indent: -2ch;
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .post-description::before {
+    content: '# ';
+  }
+
+  .post-tags {
+    margin-top: 0.125rem;
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .empty {
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    margin-left: 0.5ch;
+    vertical-align: text-bottom;
+    background: var(--color-prompt);
+  }
+</style>

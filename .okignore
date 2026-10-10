@@ -1,0 +1,27 @@
+# What OpenKnowledge should not show or index: everything that is not writing.
+# Content is decks/ and posts/.
+.agents/
+.astro/
+.claude/
+.cortex/
+.github/
+.specimen/
+design/
+dist/
+node_modules/
+public/
+scripts/
+slidev-addon-site/
+src/
+*.json
+*.lock
+*.yaml
+*.yml
+*.ts
+*.svg
+.gitignore
+.mcp.json
+.nvmrc
+AGENTS.md
+CLAUDE.md
+README.md

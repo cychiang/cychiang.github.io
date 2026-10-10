@@ -1,0 +1,111 @@
+---
+import { getCollection, render } from 'astro:content';
+import Prompt from '../../components/Prompt.astro';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  // Drafts are built while developing and left out of the published site.
+  const posts = await getCollection('posts', ({ data }) => import.meta.env.DEV || !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const iso = post.data.date.toISOString().slice(0, 10);
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article class="post">
+    <header class="post-header">
+      <Prompt command={`cat posts/${post.id}.md`} />
+      <h1>{post.data.title}</h1>
+      <p class="post-meta">
+        <time datetime={iso}>{iso}</time>
+        {post.data.tags.length > 0 && <span>{post.data.tags.map((tag) => `#${tag}`).join(' ')}</span>}
+        {post.data.draft && <span class="post-draft">draft, hidden when published</span>}
+      </p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <Prompt command="cd ~" />
+      <p><a href={`${base}/`}>All decks and posts</a></p>
+    </footer>
+  </article>
+</Base>
+
+<script>
+  // Render ```mermaid blocks with the design system's Mermaid configuration.
+  // Mermaid is loaded only on pages that have a diagram.
+  const blocks = document.querySelectorAll<HTMLPreElement>('pre[data-language="mermaid"]');
+  if (blocks.length > 0) {
+    const [{ default: mermaid }, { mermaidConfig, waitForFonts }] = await Promise.all([
+      import('mermaid'),
+      import('../../../design/mermaid.ts'),
+    ]);
+    await waitForFonts();
+    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({ startOnLoad: false, ...mermaidConfig, theme: dark ? 'dark' : 'base' });
+    let n = 0;
+    for (const pre of blocks) {
+      const code = pre.textContent ?? '';
+      try {
+        const { svg } = await mermaid.render(`post-diagram-${n++}`, code);
+        const figure = document.createElement('figure');
+        figure.className = 'diagram';
+        figure.innerHTML = svg;
+        pre.replaceWith(figure);
+      } catch (error) {
+        console.warn('Mermaid could not render a diagram', error);
+      }
+    }
+  }
+</script>
+
+<style>
+  .post {
+    max-width: 76ch;
+    padding-block: clamp(2rem, 6vw, 4rem) 0;
+  }
+
+  .post-header h1 {
+    margin-top: 1rem;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: var(--weight-strong);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2ch;
+    margin-top: 0.75rem;
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .post-draft {
+    color: var(--color-flag);
+  }
+
+  .prose {
+    margin-top: 2rem;
+  }
+
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: var(--border) solid var(--color-line);
+  }
+
+  .post-footer p {
+    margin-top: 0.5rem;
+  }
+</style>
