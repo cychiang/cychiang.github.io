@@ -144,6 +144,23 @@ Shiki themes (`design/shiki.ts`); fenced `mermaid` blocks render in the
 browser with `design/mermaid.ts`. On the homepage, posts are a listing
 under `ls posts/`: date, title, description as a comment, tags.
 
+## Screens of every size
+
+The homepage and posts are responsive without a separate mobile design:
+sizes are fluid (`clamp()` for headings and padding, `ch` for horizontal
+spacing), the deck wall is a grid that fills as many 19rem columns as fit,
+and the post column is centred at 76 characters wide on a large screen and
+full width on a phone. Three things change below 36rem: the prompt loses its
+`user@host` part (the `$` alone still reads as a prompt), only one empty
+slot is shown on the wall, and anything wider than the column scrolls
+sideways inside its own pane rather than widening the page: code blocks,
+tables, and diagrams, which keep a readable minimum width instead of
+shrinking to a thumbnail. Decks are Slidev's responsibility; they scale the
+16:9 canvas to the screen.
+
+Check every change at 390px, 768px and 1920px in both modes; the page must
+never scroll horizontally.
+
 ## Link previews
 
 Every page has an Open Graph image (`src/og/render.ts`), rendered from the

@@ -164,10 +164,12 @@ a:hover {
   font-size: 0.95em;
 }
 
-/* Code blocks are panes. Shiki emits both palettes; pick one by scheme. */
+/* Code blocks are panes. Shiki emits both palettes; pick one by scheme.
+   Long lines scroll inside the pane instead of widening the page. */
 .prose pre {
   padding: 0.75rem 1rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: var(--border) solid var(--color-line);
   border-radius: var(--radius);
   background: var(--color-surface) !important;
@@ -193,19 +195,34 @@ a:hover {
   color: var(--color-ink-soft);
 }
 
+/* Diagrams keep a readable size: on a narrow screen they scroll sideways
+   rather than shrinking to a thumbnail. */
 .prose .diagram {
   margin: 1.5rem 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .prose .diagram svg {
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  min-width: 36rem;
   height: auto;
 }
 
+
+/* A block table scrolls sideways when it is wider than the column; its rows
+   still line up because the browser wraps them in one anonymous table. */
 .prose table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: var(--text-sm);
+}
+
+.prose img {
+  height: auto;
 }
 
 .prose th,
