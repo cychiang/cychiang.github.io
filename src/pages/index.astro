@@ -13,9 +13,18 @@ const decks = (await getCollection('decks', ({ data }) => import.meta.env.DEV ||
 const posts = (await getCollection('posts', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  url: Astro.site?.href,
+  description: site.description,
+  author: { '@type': 'Person', name: site.author.name, url: site.author.url, sameAs: site.links.map((l) => l.href) },
+};
 ---
 
-<Base>
+<Base jsonLd={jsonLd}>
   <section class="intro">
     <Prompt command="cat about.txt" />
     <h1>{site.headline}</h1>

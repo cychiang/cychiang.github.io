@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Prompt from '../../components/Prompt.astro';
 import Base from '../../layouts/Base.astro';
+import { site } from '../../site.config';
 
 export async function getStaticPaths() {
   // Drafts are built while developing and left out of the published site.
@@ -13,9 +14,26 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const iso = post.data.date.toISOString().slice(0, 10);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: iso,
+  keywords: post.data.tags.join(', '),
+  author: { '@type': 'Person', name: site.author.name, url: site.author.url },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+};
 ---
 
-<Base title={post.data.title} description={post.data.description}>
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={`posts/${post.id}`}
+  article={{ published: post.data.date, tags: post.data.tags }}
+  jsonLd={jsonLd}
+>
   <article class="post">
     <header class="post-header">
       <Prompt command={`cat posts/${post.id}.md`} />

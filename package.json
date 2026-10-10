@@ -29,11 +29,15 @@
     ]
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@slidev/cli": "^53.0.0",
     "@slidev/parser": "^53.0.0",
     "astro": "^7.3.0",
     "mermaid": "^12.1.0",
+    "satori": "^0.44.1",
     "slidev-addon-site": "workspace:*",
     "slidev-theme-terminal": "workspace:*",
     "vue": "^3.5.43",
@@ -41,6 +45,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@types/node": "^22.18.0",
     "typescript": "^6.0.3"
   }

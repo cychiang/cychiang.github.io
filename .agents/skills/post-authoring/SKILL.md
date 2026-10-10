@@ -24,8 +24,8 @@ in `design/README.md` "Posts". This skill is the working order.
 
 ```yaml
 ---
-title: Why reconcile loops
-description: One sentence, shown under the title on the homepage.
+title: Why reconcile loops            # also the page title and the link preview
+description: One sentence, shown under the title on the homepage and in link previews.
 date: 2026-10-10        # the year must match the file name
 tags: [crossplane]      # optional
 draft: true             # false to publish
