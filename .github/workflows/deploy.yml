@@ -41,18 +41,13 @@ jobs:
       - name: Check decks and types
         run: pnpm check
 
-      # Tells us where Pages will serve the site, so the same source works at
-      # the domain root or under /<repo>/ without hard-coding either.
-      - name: Read GitHub Pages settings
-        id: pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/configure-pages@v6
-
       - name: Build site and decks
         run: pnpm build
         env:
-          SITE_URL: ${{ steps.pages.outputs.origin }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # The public address, fixed and always https. Canonical URLs, the
+          # sitemap, robots.txt, the feed and preview images are built from it.
+          SITE_URL: https://cychiang.github.io
+          BASE_PATH: /
           ASTRO_TELEMETRY_DISABLED: 1
 
       - name: Upload site
