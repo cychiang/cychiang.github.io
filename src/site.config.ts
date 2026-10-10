@@ -13,6 +13,10 @@ export const site = {
     'I work on cloud platforms in Stockholm and contribute to open source. This is where the decks from that work will live. The first ones are on their way.',
   /** Used for <meta name="description"> and link previews. */
   description: 'Slide decks and notes on platform engineering by Chuan-Yen Chiang.',
+  /** The page language, for <html lang> and the feed. */
+  language: 'en',
+  /** The author, for metadata and structured data. */
+  author: { name: 'Chuan-Yen Chiang', url: 'https://github.com/cychiang' },
   /** The shell prompt shown before each section: user@host:~$ */
   prompt,
   links: [

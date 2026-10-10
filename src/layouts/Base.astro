@@ -1,32 +1,68 @@
 ---
 import '../styles/global.css';
+import { color } from '../../design/tokens.ts';
 import { site } from '../site.config';
 
 interface Props {
   /** Page title. Omit on the homepage. */
   title?: string;
   description?: string;
+  /** Path of the Open Graph image under /og/, e.g. "posts/2026-note". */
+  ogImage?: string;
+  /** Set for posts: adds article metadata. */
+  article?: { published: Date; tags: string[] };
+  /** JSON-LD structured data for the page. */
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description = site.description } = Astro.props;
+const { title, description = site.description, ogImage = 'site', article, jsonLd } = Astro.props;
 const pageTitle = title ? `${title} | ${site.name}` : site.name;
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL(`${base}/og/${ogImage}.png`, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={site.language}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={site.author.name} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href={`${base}/rss.xml`} />
+    <link rel="sitemap" href={`${base}/sitemap-index.xml`} />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={color.light.bg} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={color.dark.bg} />
+
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title ?? site.name} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    {
+      article && (
+        <>
+          <meta property="article:published_time" content={article.published.toISOString()} />
+          <meta property="article:author" content={site.author.url} />
+          {article.tags.map((tag) => (
+            <meta property="article:tag" content={tag} />
+          ))}
+        </>
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? site.name} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
@@ -48,7 +84,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <footer class="page site-footer">
       <p>
         Built with <a href="https://astro.build">Astro</a> and <a href="https://sli.dev">Slidev</a>.
-        The <a href={site.repo}>source is on GitHub</a>.
+        The <a href={site.repo}>source is on GitHub</a>. <a href={`${base}/rss.xml`}>RSS</a>.
       </p>
     </footer>
   </body>

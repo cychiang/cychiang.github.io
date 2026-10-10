@@ -19,6 +19,7 @@ the procedure; it does not repeat the rules.
 | Slide typography, a layout, a component, code colours | `design/slidev-theme/styles/*.css`, `layouts/`, `components/`, `setup/shiki.ts` |
 | Diagram look or a new diagram kind | `design/mermaid.ts` (`themeCSS`), `design/templates/diagrams/` |
 | The link back to the homepage inside decks | `slidev-addon-site/` |
+| Link preview (Open Graph) images | `src/og/render.ts`; check `dist/og/*.png` after `pnpm build` |
 
 Never edit `design/generated/` or `public/favicon.svg` by hand; they are
 written by `pnpm design:build`.

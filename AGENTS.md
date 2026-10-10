@@ -368,6 +368,32 @@ rules and a `check-<kind>.ts` in `pnpm check`, an OpenKnowledge template and
 schema in `.ok/`, the same tokens and patterns, and a section in this file
 and in `design/README.md`.
 
+## Search engines and link previews
+
+Everything below is automatic; what a page needs from its author is a
+specific `title` and a one-sentence `description` (or `info` for a deck),
+because those become the page title, the meta description, the link
+preview and the feed entry.
+
+- `src/layouts/Base.astro` writes the title, description, author, canonical
+  URL, Open Graph and Twitter tags, `theme-color` from the tokens, and
+  JSON-LD (`WebSite` on the homepage, `BlogPosting` on posts). Posts also
+  carry `article:*` tags.
+- Decks are built by Slidev, so `scripts/build-decks.ts` rewrites each
+  deck's `<head>` with the same tags after the build.
+- Preview images are rendered at build time by `src/pages/og/[...path].png.ts`
+  with `src/og/render.ts` (satori and resvg, drawn from the tokens): one for
+  the site, one per post, one per deck. They are terminal panes: prompt
+  line, title with the cursor, status line.
+- `@astrojs/sitemap` writes `sitemap-index.xml`, with deck URLs added from
+  `astro.config.ts`; `src/pages/robots.txt.ts` points at it;
+  `src/pages/rss.xml.ts` lists posts and decks.
+- Drafts are left out of all of it.
+
+Do not add a second metadata system (an SEO integration, per-page `<meta>`
+tags in components); extend `Base.astro` and `build-decks.ts` instead so
+posts and decks stay in step.
+
 ## Build and deployment
 
 `.github/workflows/deploy.yml` runs on every pull request (check and build)
@@ -377,7 +403,8 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
   `scripts/build-decks.ts` (each published deck into `dist/decks/<slug>/`).
 - The workflow passes `SITE_URL` and `BASE_PATH` from
   `actions/configure-pages`, so the site works at a domain root or under a
-  sub-path. Always build internal links from `import.meta.env.BASE_URL` in
+  sub-path. `SITE_URL` is also what canonical URLs, the sitemap, the feed
+  and preview images use; a local `pnpm build` uses http://localhost:4321. Always build internal links from `import.meta.env.BASE_URL` in
   Astro and from `withBase()` in scripts. Never hard-code a leading `/`.
 - The repository's Pages source must be set to "GitHub Actions".
 - After a deploy, a browser can keep showing the previous build for up to ten

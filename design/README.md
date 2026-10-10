@@ -144,6 +144,15 @@ Shiki themes (`design/shiki.ts`); fenced `mermaid` blocks render in the
 browser with `design/mermaid.ts`. On the homepage, posts are a listing
 under `ls posts/`: date, title, description as a comment, tags.
 
+## Link previews
+
+Every page has an Open Graph image (`src/og/render.ts`), rendered from the
+tokens in the dark palette: the prompt line that opens the page at the top,
+the title bottom-left with the cursor block after its last word, an
+optional one-line description, and a status line (site name, length, date)
+under a rule. The same pane, at 1200 × 630. Titles over forty characters
+step down a size rather than wrapping past two lines; keep titles short.
+
 ## Slides
 
 Every deck declares `theme: terminal` (`pnpm check` refuses anything else).
@@ -267,6 +276,7 @@ design/
   fonts.css                the typeface, self-hosted
   mermaid.ts               diagram configuration built from the tokens
   shiki.ts                 code colours built from the tokens (slides and posts)
+src/og/render.ts           link preview images, drawn from the tokens
   generated/               written by `pnpm design:build`; committed
   slidev-theme/            slidev-theme-terminal: layouts, styles, components,
                            setup/shiki.ts, setup/mermaid.ts, global-top.vue
