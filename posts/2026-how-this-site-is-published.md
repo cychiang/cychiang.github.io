@@ -13,11 +13,11 @@ repository, and both reach the homepage the same way.
 ## The loop
 
 ```mermaid
-flowchart LR
+flowchart TD
   ok[OpenKnowledge]:::focus -- "auto-sync, every minute" --> writing[(writing branch)]:::store
+  writing -. "pnpm check" .-> ci[Checks]
   writing -- "merge" --> main[(main)]:::store
   main -- "GitHub Actions" --> site[cychiang.github.io]:::ok
-  writing -. "pnpm check" .-> ci[Checks]
 ```
 
 Writing happens in OpenKnowledge, which opens this repository as its
