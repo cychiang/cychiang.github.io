@@ -20,8 +20,8 @@ export const site = {
   /** The shell prompt shown before each section: user@host:~$ */
   prompt,
   links: [
-    { label: 'github', href: 'https://github.com/cychiang' },
-    { label: 'linkedin', href: 'https://www.linkedin.com/in/chuan-yen' },
+    { label: 'GitHub', href: 'https://github.com/cychiang' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/chuan-yen' },
   ],
   repo: 'https://github.com/cychiang/cychiang.github.io',
 } as const;
