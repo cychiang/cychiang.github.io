@@ -1,11 +1,13 @@
 name: Build and deploy
 
-# Pull requests are built and checked. Pushes to main are also published to
-# GitHub Pages (repository Settings > Pages > Source must be "GitHub Actions").
+# Pull requests and pushes to the writing branch (where OpenKnowledge
+# auto-syncs notes) are built and checked. Pushes to main are also published
+# to GitHub Pages (repository Settings > Pages > Source must be "GitHub
+# Actions").
 
 on:
   push:
-    branches: [main]
+    branches: [main, writing]
   pull_request:
   workflow_dispatch:
 
@@ -43,7 +45,7 @@ jobs:
       # the domain root or under /<repo>/ without hard-coding either.
       - name: Read GitHub Pages settings
         id: pages
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
 
       - name: Build site and decks
@@ -54,13 +56,13 @@ jobs:
           ASTRO_TELEMETRY_DISABLED: 1
 
       - name: Upload site
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:

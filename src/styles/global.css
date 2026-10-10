@@ -77,3 +77,164 @@ a:hover {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Markdown content in posts. Headings, lists, quotes and code follow the
+   same patterns as slides (design/README.md, "Patterns"). */
+.prose > * + * {
+  margin-top: 1rem;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin-top: 2.25rem;
+  font-weight: var(--weight-strong);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.prose h2 {
+  padding-bottom: 0.35rem;
+  border-bottom: var(--border) solid var(--color-line);
+  font-size: 1.25rem;
+}
+
+.prose h3 {
+  font-size: 1.0625rem;
+}
+
+.prose h4 {
+  font-size: 1rem;
+}
+
+.prose p,
+.prose li {
+  max-width: 76ch;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 2ch;
+  list-style: none;
+}
+
+.prose li {
+  position: relative;
+  margin: 0.25rem 0;
+}
+
+.prose ul > li::before {
+  content: '-';
+  position: absolute;
+  left: -2ch;
+  color: var(--color-ink-soft);
+}
+
+.prose ol {
+  counter-reset: item;
+}
+
+.prose ol > li {
+  counter-increment: item;
+}
+
+.prose ol > li::before {
+  content: counter(item) '.';
+  position: absolute;
+  left: -2.5ch;
+  color: var(--color-ink-soft);
+}
+
+.prose blockquote {
+  margin: 1rem 0;
+  padding: 0 0 0 2ch;
+  border-left: var(--border) solid var(--color-line);
+  color: var(--color-ink-soft);
+}
+
+.prose blockquote > * {
+  margin: 0;
+}
+
+.prose :not(pre) > code {
+  padding: 0 0.4ch;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 0.95em;
+}
+
+/* Code blocks are panes. Shiki emits both palettes; pick one by scheme. */
+.prose pre {
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface) !important;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: transparent;
+}
+
+.prose pre span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose pre span {
+    color: var(--shiki-dark);
+  }
+}
+
+.prose pre[data-language='mermaid'] {
+  color: var(--color-ink-soft);
+}
+
+.prose .diagram {
+  margin: 1.5rem 0;
+}
+
+.prose .diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.prose th,
+.prose td {
+  padding: 0.4em 2ch 0.4em 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  color: var(--color-ink-soft);
+  font-weight: var(--weight-regular);
+  border-bottom: var(--border) solid var(--color-line);
+}
+
+.prose tr + tr td {
+  border-top: var(--border) solid var(--color-line);
+}
+
+.prose hr {
+  border: 0;
+  border-top: var(--border) solid var(--color-line);
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: var(--radius);
+}
+
+.prose strong {
+  font-weight: var(--weight-strong);
+}

@@ -5,6 +5,10 @@ decks/*/dist/
 # generated
 .astro/
 .specimen/
+
+# OpenKnowledge machine-local state (the project config in .ok/ is committed)
+.ok/local/
+.ok/worktrees/
 .slidev/
 components.d.ts
 

@@ -18,7 +18,9 @@ pnpm new:deck 2026-short-title "Deck title"   # <year>-<kebab>, becomes the URL
 pnpm deck 2026-short-title                     # dev server, http://localhost:3030
 ```
 
-Never rename a published deck's folder; links would break.
+Never rename a published deck's folder; links would break. In OpenKnowledge
+the "Deck (slides.md)" template gives the same headmatter; create the file
+as `decks/<slug>/slides.md`.
 
 ## Headmatter
 
