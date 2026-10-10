@@ -40,8 +40,10 @@ draft: true             # false to publish
   tokens. Inline code for names of things.
 - Diagrams: a fenced `mermaid` block copied from the matching template in
   `design/templates/diagrams/` (flowchart, architecture, sequence, state),
-  keeping that template's rules. They render in the browser with the same
-  configuration as slides, in light and dark.
+  keeping that template's rules, but drawn top to bottom (`flowchart TD`):
+  a post renders a diagram at its natural size inside a 76-character
+  column, and anything wider scrolls sideways. They render in the browser
+  with the same configuration as slides, in light and dark.
 - Links to other posts are relative (`./2026-other-post.md`); OpenKnowledge
   flags broken ones. External links are plain Markdown links.
 - Nothing confidential from an employer or client. Back claims with

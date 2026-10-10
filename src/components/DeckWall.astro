@@ -157,8 +157,9 @@ const emptySlots = Math.max(0, 3 - decks.length);
     }
   }
 
-  /* In a single column one outline is enough. */
-  @media (max-width: 42rem) {
+  /* The outlines fill the first row and no more: with one or two columns
+     a second outline would start a row of its own. */
+  @media (max-width: 64rem) {
     .empty-slot + .empty-slot {
       display: none;
     }

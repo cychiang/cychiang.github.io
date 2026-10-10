@@ -109,10 +109,17 @@ const image = new URL(`${base}/og/${ogImage}.png`, Astro.site);
 
   nav ul {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  /* A finger-sized target around each link without changing the layout. */
+  nav a {
+    display: inline-block;
+    padding: 0.625rem 0.25rem;
+    margin: -0.625rem 0;
   }
 
   main {

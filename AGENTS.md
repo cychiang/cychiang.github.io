@@ -332,8 +332,9 @@ editor through `.ok/schemas/post.json`. Keep the two in step.
 Writing: start with the claim; one idea per section; headings in sentence
 case; code in fenced blocks with a language (coloured with the design
 tokens); diagrams as fenced `mermaid` blocks copied from
-`design/templates/diagrams/`, rendered in the browser with the same
-configuration as slides. Relative links between posts (`./other-post.md`)
+`design/templates/diagrams/` but drawn top to bottom (`flowchart TD`, the
+column is 76 characters wide and a diagram renders at its natural size),
+rendered in the browser with the same configuration as slides. Relative links between posts (`./other-post.md`)
 are fine; OpenKnowledge checks them. The content rules for decks apply.
 
 ## Writing with OpenKnowledge
