@@ -45,9 +45,9 @@ Every pull request runs `pnpm check` and a build; only `main` deploys.
 
 ## Analytics
 
-Optional, cookieless GoatCounter page views on every page and deck. It is
-off unless the repository variable `GOATCOUNTER_CODE` is set; setup
-steps are in [AGENTS.md](AGENTS.md#analytics).
+Page views are counted with [GoatCounter](https://www.goatcounter.com), if
+the repository variable `GOATCOUNTER_CODE` is set. See
+[AGENTS.md](AGENTS.md#analytics).
 
 ## Further reading
 

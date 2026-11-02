@@ -453,37 +453,13 @@ posts and decks stay in step.
 
 ## Analytics
 
-[GoatCounter](https://www.goatcounter.com) counts page views. It is optional,
-cookieless (no consent banner needed) and off by default. `src/analytics.ts`
-holds the switch and the script tag; `Base.astro` adds it to every Astro page
-and `scripts/build-decks.ts` to every deck. Both read `GOATCOUNTER_CODE` at
-build time. Unset (local builds, pull requests, forks) means no script and no
-requests. The code is public (it is in the page source), so it is a repository
-*variable*, not a secret. Do not add a second tracker or per-component
-snippets.
-
-No DNS or custom domain is needed; the script reports to
-`https://<code>.goatcounter.com`.
-
-### One-time setup
-
-1. Sign up at [goatcounter.com](https://www.goatcounter.com/signup) (free for
-   personal use). Pick a site code, e.g. `cychiang`, and the site address
-   `cychiang.github.io`. The dashboard is `https://<code>.goatcounter.com`.
-2. In this repository: Settings > Secrets and variables > Actions >
-   **Variables** > New repository variable `GOATCOUNTER_CODE` = the code, or
-   `gh variable set GOATCOUNTER_CODE --body cychiang`.
-3. Push to `main` (or re-run the workflow). Visit the site, then check the
-   dashboard; the view appears within a minute. Ad blockers can hide it, so
-   test in a private window without one.
-
-To turn tracking off, delete the variable and redeploy.
-
-### Limits
-
-- Decks use hash routing, so a deck counts once per load, not per slide.
-- Visitors with ad blockers are not counted.
-- GoatCounter's script is loaded from `gc.zgo.at`; nothing else is added.
+[GoatCounter](https://www.goatcounter.com) counts page views: cookieless and
+off by default. `src/analytics.ts` holds the switch and the script tag;
+`Base.astro` adds it to every Astro page and `scripts/build-decks.ts` to every
+deck. Both read `GOATCOUNTER_CODE` at build time, which the deploy workflow
+takes from a repository variable of the same name (public, so not a secret)
+and passes only on pushes to `main`. Unset means no script and no requests.
+Do not add a second tracker or per-component snippets.
 
 ## Build and deployment
 
