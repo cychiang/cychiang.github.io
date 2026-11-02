@@ -40,7 +40,7 @@ src/content.config.ts      the `decks`, `posts` and `about` collections
 src/pages/                 Astro pages (index, about, 404, posts/[slug])
 src/components/            DeckWall, DeckCard, PostList, Prompt, PromptPrefix
 src/layouts/Base.astro     html shell, header, footer
-src/analytics.ts           optional Google Analytics snippet (see "Analytics")
+src/analytics.ts           optional GoatCounter script (see "Analytics")
 src/markdown/post-links.ts rewrites `./other-post.md` links in posts to /posts/<slug>/
 src/styles/global.css      imports the design tokens; homepage layout values
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
@@ -453,44 +453,37 @@ posts and decks stay in step.
 
 ## Analytics
 
-Google Analytics 4 (GA4) is optional and off by default. `src/analytics.ts`
-holds the switch and the gtag snippet; `Base.astro` adds it to every Astro
-page and `scripts/build-decks.ts` to every deck. Both read
-`GA_MEASUREMENT_ID` at build time. Unset (local builds, pull requests, forks)
-means no script and no requests. The ID is public by nature (it is visible in
-the page source), so it is a repository *variable*, not a secret. Do not add a
-second tracker or per-component snippets.
+[GoatCounter](https://www.goatcounter.com) counts page views. It is optional,
+cookieless (no consent banner needed) and off by default. `src/analytics.ts`
+holds the switch and the script tag; `Base.astro` adds it to every Astro page
+and `scripts/build-decks.ts` to every deck. Both read `GOATCOUNTER_CODE` at
+build time. Unset (local builds, pull requests, forks) means no script and no
+requests. The code is public (it is in the page source), so it is a repository
+*variable*, not a secret. Do not add a second tracker or per-component
+snippets.
 
-No DNS or custom domain is needed: GA4 is a script on the page that reports to
-Google, so it works on `github.io`.
+No DNS or custom domain is needed; the script reports to
+`https://<code>.goatcounter.com`.
 
 ### One-time setup
 
-1. In [analytics.google.com](https://analytics.google.com) > Admin > Create >
-   **Account** (any name), then **Property** (name `cychiang.github.io`, your
-   time zone and currency).
-2. Create a **Web** data stream with URL `https://cychiang.github.io`. Leave
-   "Enhanced measurement" on (page views, outbound clicks, scrolls, file
-   downloads).
-3. Copy the **Measurement ID** (`G-XXXXXXXXXX`) from the stream details.
-4. In this repository: Settings > Secrets and variables > Actions >
-   **Variables** > New repository variable `GA_MEASUREMENT_ID` = that ID.
-5. Push to `main` (or re-run the workflow). Open the site, then check
-   Analytics > Reports > **Realtime**; your visit should appear within a
-   minute. Ad blockers hide it, so test in a private window without one.
-6. Optional, in the stream's settings: turn off Google signals and set data
-   retention to 2 months (Admin > Data collection and modification) for a
-   lighter privacy footprint.
+1. Sign up at [goatcounter.com](https://www.goatcounter.com/signup) (free for
+   personal use). Pick a site code, e.g. `cychiang`, and the site address
+   `cychiang.github.io`. The dashboard is `https://<code>.goatcounter.com`.
+2. In this repository: Settings > Secrets and variables > Actions >
+   **Variables** > New repository variable `GOATCOUNTER_CODE` = the code, or
+   `gh variable set GOATCOUNTER_CODE --body cychiang`.
+3. Push to `main` (or re-run the workflow). Visit the site, then check the
+   dashboard; the view appears within a minute. Ad blockers can hide it, so
+   test in a private window without one.
 
 To turn tracking off, delete the variable and redeploy.
 
 ### Limits
 
-- Decks use hash routing, so GA4 counts one view per deck load, not per
-  slide.
-- Visitors with ad blockers or Do Not Track are not counted.
-- The site shows no cookie banner. If you want visitors from the EU/UK, add
-  consent handling before enabling this.
+- Decks use hash routing, so a deck counts once per load, not per slide.
+- Visitors with ad blockers are not counted.
+- GoatCounter's script is loaded from `gc.zgo.at`; nothing else is added.
 
 ## Build and deployment
 
@@ -499,7 +492,7 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 
 - `pnpm build` runs `astro build` (homepage into `dist/`) and then
   `scripts/build-decks.ts` (each published deck into `dist/decks/<slug>/`).
-- `GA_MEASUREMENT_ID` comes from a repository variable and is passed only on
+- `GOATCOUNTER_CODE` comes from a repository variable and is passed only on
   pushes to `main` (see "Analytics").
 - The workflow sets `SITE_URL` to `https://cychiang.github.io` (fixed, always
   https) and `BASE_PATH` to `/`. `SITE_URL` is what canonical URLs, the

@@ -45,8 +45,8 @@ Every pull request runs `pnpm check` and a build; only `main` deploys.
 
 ## Analytics
 
-Optional Google Analytics 4, on the homepage, posts, about page and decks.
-It is off unless the repository variable `GA_MEASUREMENT_ID` is set; setup
+Optional, cookieless GoatCounter page views on every page and deck. It is
+off unless the repository variable `GOATCOUNTER_CODE` is set; setup
 steps are in [AGENTS.md](AGENTS.md#analytics).
 
 ## Further reading

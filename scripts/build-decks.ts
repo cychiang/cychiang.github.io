@@ -6,14 +6,14 @@ import path from 'node:path';
 import { ROOT, SLIDEV_BIN, listDecks, validateDeck, withBase } from './lib/decks.ts';
 import type { Deck } from './lib/decks.ts';
 import { site } from '../src/site.config.ts';
-import { analyticsSnippet, measurementId } from '../src/analytics.ts';
+import { analyticsSnippet, goatcounterCode } from '../src/analytics.ts';
 
 // The same origin Astro builds with (see astro.config.ts), so links and
 // previews point at the published site.
 const SITE_URL = process.env.SITE_URL || 'http://localhost:4321';
 
-// Same switch as the homepage: no measurement ID, no tracking.
-const GA_ID = measurementId(process.env);
+// Same switch as the homepage: no site code, no tracking.
+const GC_CODE = goatcounterCode(process.env);
 
 const escapeHtml = (text: string) =>
   text.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
@@ -46,7 +46,7 @@ async function addSeoMeta(deck: Deck, out: string) {
     `<meta name="twitter:title" content="${title}">`,
     `<meta name="twitter:description" content="${description}">`,
     `<meta name="twitter:image" content="${image}">`,
-    ...(GA_ID ? [analyticsSnippet(GA_ID)] : []),
+    ...(GC_CODE ? [analyticsSnippet(GC_CODE)] : []),
   ].join('\n    ');
   const html = (await readFile(file, 'utf8'))
     .replace(/<title>[^<]*<\/title>\s*/g, '')
