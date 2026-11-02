@@ -48,6 +48,9 @@ jobs:
           # sitemap, robots.txt, the feed and preview images are built from it.
           SITE_URL: https://cychiang.github.io
           BASE_PATH: /
+          # Google Analytics measurement ID (G-XXXXXXXXXX) from the repository
+          # variable of the same name. Only builds that are published track.
+          GA_MEASUREMENT_ID: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.GA_MEASUREMENT_ID || '' }}
           ASTRO_TELEMETRY_DISABLED: 1
 
       - name: Upload site

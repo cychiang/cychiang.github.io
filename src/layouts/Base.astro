@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { color } from '../../design/tokens.ts';
 import { site } from '../site.config';
+import { analyticsSnippet, measurementId } from '../analytics';
 
 interface Props {
   /** Page title. Omit on the homepage. */
@@ -20,6 +21,7 @@ const pageTitle = title ? `${title} | ${site.name}` : site.name;
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const image = new URL(`${base}/og/${ogImage}.png`, Astro.site);
+const gaId = measurementId(process.env);
 ---
 
 <!doctype html>
@@ -63,6 +65,7 @@ const image = new URL(`${base}/og/${ogImage}.png`, Astro.site);
     <meta name="twitter:image" content={image} />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {gaId && <Fragment set:html={analyticsSnippet(gaId)} />}
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
