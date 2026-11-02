@@ -43,6 +43,12 @@ pnpm preview   # serve dist/ as it will be published
 
 Every pull request runs `pnpm check` and a build; only `main` deploys.
 
+## Analytics
+
+Page views are counted with [GoatCounter](https://www.goatcounter.com), if
+the repository variable `GOATCOUNTER_CODE` is set. See
+[AGENTS.md](AGENTS.md#analytics).
+
 ## Further reading
 
 - [AGENTS.md](AGENTS.md): the full conventions, for people and coding agents.

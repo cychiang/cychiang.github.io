@@ -40,6 +40,7 @@ src/content.config.ts      the `decks`, `posts` and `about` collections
 src/pages/                 Astro pages (index, about, 404, posts/[slug])
 src/components/            DeckWall, DeckCard, PostList, Prompt, PromptPrefix
 src/layouts/Base.astro     html shell, header, footer
+src/analytics.ts           optional GoatCounter script (see "Analytics")
 src/markdown/post-links.ts rewrites `./other-post.md` links in posts to /posts/<slug>/
 src/styles/global.css      imports the design tokens; homepage layout values
 scripts/lib/decks.ts       deck discovery and validation, shared by everything
@@ -450,6 +451,16 @@ Do not add a second metadata system (an SEO integration, per-page `<meta>`
 tags in components); extend `Base.astro` and `build-decks.ts` instead so
 posts and decks stay in step.
 
+## Analytics
+
+[GoatCounter](https://www.goatcounter.com) counts page views: cookieless and
+off by default. `src/analytics.ts` holds the switch and the script tag;
+`Base.astro` adds it to every Astro page and `scripts/build-decks.ts` to every
+deck. Both read `GOATCOUNTER_CODE` at build time, which the deploy workflow
+takes from a repository variable of the same name (public, so not a secret)
+and passes only on pushes to `main`. Unset means no script and no requests.
+Do not add a second tracker or per-component snippets.
+
 ## Build and deployment
 
 `.github/workflows/deploy.yml` runs on every pull request (check and build)
@@ -457,6 +468,8 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
 
 - `pnpm build` runs `astro build` (homepage into `dist/`) and then
   `scripts/build-decks.ts` (each published deck into `dist/decks/<slug>/`).
+- `GOATCOUNTER_CODE` comes from a repository variable and is passed only on
+  pushes to `main` (see "Analytics").
 - The workflow sets `SITE_URL` to `https://cychiang.github.io` (fixed, always
   https) and `BASE_PATH` to `/`. `SITE_URL` is what canonical URLs, the
   sitemap, robots.txt, the feed and preview images use, so every public URL

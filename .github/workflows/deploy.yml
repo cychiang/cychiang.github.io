@@ -48,6 +48,9 @@ jobs:
           # sitemap, robots.txt, the feed and preview images are built from it.
           SITE_URL: https://cychiang.github.io
           BASE_PATH: /
+          # GoatCounter site code (e.g. cychiang) from the repository variable
+          # of the same name. Only builds that are published count visits.
+          GOATCOUNTER_CODE: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.GOATCOUNTER_CODE || '' }}
           ASTRO_TELEMETRY_DISABLED: 1
 
       - name: Upload site
