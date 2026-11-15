@@ -7,10 +7,12 @@ packages:
   - slidev-addon-site
 
 overrides:
-  # magic-string 1.4.3 breaks every Slidev build through UnoCSS
-  # (https://github.com/unocss/unocss/issues/5373). Remove this once a fixed
-  # UnoCSS is released, then confirm with `pnpm build`.
-  magic-string@^1.4.0: 1.4.2
+  # @astrojs/check resolved a beta @emnapi/runtime 2.0.0-beta.2 as a peer, which
+  # crashes `astro check` on exit and makes it skip type-checking silently (the
+  # command still exits 0 in CI). Keep these on the stable 1.x line, then
+  # confirm `pnpm check` prints "Result (N files)" before removing them.
+  "@emnapi/runtime": 1.11.3
+  "@emnapi/core": 1.11.3
 
 # Dependencies allowed to run install scripts. pnpm blocks all others.
 allowBuilds:

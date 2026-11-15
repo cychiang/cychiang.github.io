@@ -494,11 +494,12 @@ and on every push to `main` (check, build, deploy to GitHub Pages).
   it to `allowBuilds` in `pnpm-workspace.yaml` after checking what it runs.
 - Dependabot opens weekly update pull requests. Merge them only when the
   workflow is green.
-- `pnpm-workspace.yaml` has an `overrides` entry pinning `magic-string` 1.x
-  to `1.4.2`. Version 1.4.3 breaks every Slidev build through UnoCSS
-  ([unocss#5373](https://github.com/unocss/unocss/issues/5373),
-  [slidev#2768](https://github.com/slidevjs/slidev/issues/2768)). Remove the
-  override once a fixed UnoCSS is released, and confirm with `pnpm build`.
+- `pnpm-workspace.yaml` has an `overrides` entry pinning `@emnapi/runtime` and
+  `@emnapi/core` to `1.11.3`. Without it `@astrojs/check` can resolve a beta
+  `@emnapi/runtime` 2.0.0-beta.2 peer, which crashes `astro check` on exit. The
+  command then skips type-checking and still exits 0 in CI, so a green build
+  proves nothing. After a dependency update, confirm that `pnpm check` prints
+  `Result (N files)`. Remove the override once the stable peer resolves again.
 
 ## Before you finish
 
