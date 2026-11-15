@@ -29,14 +29,14 @@
     ]
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "0.4.5",
+    "@astrojs/markdown-satteri": "0.4.6",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
     "@slidev/cli": "^53.0.0",
     "@slidev/parser": "^53.0.0",
-    "astro": "^7.4.2",
+    "astro": "^7.4.4",
     "mermaid": "^12.2.0",
     "satori": "^0.63.2",
     "slidev-addon-site": "workspace:*",
